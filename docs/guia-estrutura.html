@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>PokéDraft — Guia da Estrutura do Projeto</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 10.5pt; line-height: 1.5; color: #1a1a2e; margin: 0;
+  }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; color: #0f2b46; line-height: 1.2; }
+  h1 { font-size: 26pt; margin: 0 0 4pt; }
+  h2 {
+    font-size: 15pt; margin: 22pt 0 8pt; padding-bottom: 4pt;
+    border-bottom: 2px solid #12a594;
+  }
+  h3 { font-size: 12pt; margin: 14pt 0 4pt; color: #14324f; }
+  p { margin: 6pt 0; }
+  code, .mono {
+    font-family: "Consolas", "SFMono-Regular", Menlo, monospace;
+    font-size: 9.2pt; background: #eef2f5; padding: 1px 4px; border-radius: 3px;
+    color: #0f2b46;
+  }
+  pre {
+    font-family: "Consolas", monospace; font-size: 9pt; line-height: 1.45;
+    background: #0f2b46; color: #e8eef3; padding: 10pt 12pt; border-radius: 6px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 8pt 0; font-size: 9.5pt; }
+  th, td { text-align: left; vertical-align: top; padding: 5pt 7pt; border: 1px solid #cdd8e0; }
+  th { background: #0f2b46; color: #fff; font-family: -apple-system, "Segoe UI", sans-serif; }
+  tr:nth-child(even) td { background: #f4f7f9; }
+  .lead { font-size: 11.5pt; color: #3a4a5a; margin: 2pt 0 0; }
+  .tag {
+    display: inline-block; background: #12a594; color: #fff; font-size: 8pt;
+    font-weight: 700; letter-spacing: .5px; padding: 2px 7px; border-radius: 10px;
+    text-transform: uppercase; vertical-align: middle;
+  }
+  .callout {
+    background: #e7f6f4; border-left: 4px solid #12a594; padding: 8pt 12pt;
+    border-radius: 0 6px 6px 0; margin: 10pt 0;
+  }
+  .callout.warn { background: #fdf0e3; border-left-color: #e08a2b; }
+  .muted { color: #6a7784; }
+  .filetree {
+    font-family: "Consolas", monospace; font-size: 8pt; line-height: 1.42;
+    background: #f4f7f9; border: 1px solid #cdd8e0; border-radius: 6px; padding: 9pt 11pt;
+    white-space: pre; overflow: hidden;
+  }
+  .filetree b { color: #0f2b46; }
+  .filetree .c { color: #6a7784; }
+  .page-break { page-break-before: always; }
+  h2.page-break, h3.page-break { border-top: 0; }
+  ul { margin: 6pt 0; padding-left: 18pt; }
+  li { margin: 3pt 0; }
+  .cover { margin-bottom: 8pt; }
+  .cover .sub { font-family: Georgia, serif; font-size: 13pt; color: #12a594; font-weight: 700; }
+  .foot { margin-top: 4pt; font-size: 9pt; color: #6a7784; }
+  h2 { page-break-after: avoid; }
+  table, pre, .filetree, .callout { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="tag">Desenvolvimento de Software Visual</div>
+  <h1>PokéDraft</h1>
+  <p class="sub">Guia da estrutura do projeto</p>
+  <p class="lead">O que é cada pasta, o que cada arquivo faz e os conceitos essenciais para começar a mexer no código.</p>
+  <p class="foot">Base: 1ª entrega (aula 28/08) — solução criada, banco modelado, primeira migration aplicada.</p>
+</div>
+
+<h2>1. O que é o sistema</h2>
+<p><b>PokéDraft</b> é um simulador de batalha Pokémon entre <b>dois jogadores</b>. O jogo tem três fases:</p>
+<ul>
+  <li><b>Draft de Pokémon</b> — o sistema sorteia vários <i>samples</i> (pacotes) de Pokémon, iguais para os dois jogadores. Cada jogador tem um orçamento em <b>pontos</b>; cada Pokémon tem um <b>custo</b>. Dá para <b>banir</b> e <b>comprar</b> Pokémon. Se os pontos acabam, o jogador pode <b>vender</b> um Pokémon do time (recebe menos do que pagou) para liberar pontos.</li>
+  <li><b>Draft de itens</b> — um único pacote com todos os itens de batalha, compartilhado. Cada item pode ser <b>equipado</b> em um Pokémon, somando ao <b>overall</b> dele.</li>
+  <li><b>Simulação da batalha</b> — cada jogador escolhe a ordem do time. Os times se enfrentam <b>1×1</b> (1º contra 1º, etc.). Cada duelo vencido vale 1 ponto; quem fizer mais pontos vence. Empate 3–3 → decide a média do overall.</li>
+</ul>
+<p><b>Overall</b> = status base do Pokémon + item equipado + natureza + IV. Na batalha entram bônus por vantagem de tipagem, velocidade e tipo de ataque.</p>
+<p class="muted"><b>Fora do escopo:</b> várias gerações, draft de golpes (moveset), escolher IV/natureza manualmente.</p>
+
+<h2>2. Tecnologias e por quê</h2>
+<table>
+  <tr><th>Camada</th><th>Tecnologia</th><th>Papel</th></tr>
+  <tr><td>Backend</td><td>C# / ASP.NET Core MVC (.NET 8)</td><td>Roda no servidor: regras do jogo, acesso ao banco, respostas.</td></tr>
+  <tr><td>API</td><td>Controllers REST (JSON)</td><td>Endpoints <code>GET/POST/PUT/DELETE</code> que o frontend chama.</td></tr>
+  <tr><td>Banco</td><td>SQLite + Entity Framework Core 8</td><td>Um arquivo <code>pokedraft.db</code>. O EF Core traduz classes C# ↔ tabelas.</td></tr>
+  <tr><td>Frontend</td><td>HTML + CSS + JavaScript (<code>fetch</code>)</td><td>Telas na pasta <code>wwwroot/</code> e <code>Views/</code>, consumindo a API.</td></tr>
+  <tr><td>Dados</td><td>PokéAPI</td><td>Fonte dos Pokémon (status, tipos, sprites) — importados para o nosso banco.</td></tr>
+  <tr><td>Apoio</td><td>Git + GitHub, Trello</td><td>Versionamento do código e quadro de tarefas.</td></tr>
+</table>
+<div class="callout">
+  <b>SQLite</b> foi escolhido no lugar do MySQL: não precisa instalar nada nem subir servidor de banco — é só um arquivo. Cada integrante gera o seu localmente a partir das <i>migrations</i>.
+</div>
+
+<h2>3. Como rodar (primeira vez)</h2>
+<p>Pré-requisitos por máquina: <b>.NET SDK 8</b>, <b>Git</b>, <b>VS Code</b> (extensões <b>C#</b> e <b>C# Dev Kit</b>) e a ferramenta do EF Core:</p>
+<pre>dotnet tool install --global dotnet-ef --version 8.*</pre>
+<p>Depois:</p>
+<pre>git clone https://github.com/eduardowoz/PokeDraft-DesenvolvimentoSoftwereVIsual.git
+cd PokeDraft-DesenvolvimentoSoftwereVIsual
+dotnet restore
+dotnet ef database update --project PokeDraft.Web   # cria o pokedraft.db
+dotnet run --project PokeDraft.Web</pre>
+<p>O terminal mostra um endereço (<code>http://localhost:5xxx</code>) — abra no navegador.</p>
+
+<h2 class="page-break">4. Mapa de pastas</h2>
+<div class="filetree"><b>PokeDraft-DesenvolvimentoSoftwereVIsual/</b>
+├─ PokeDraft.sln            <span class="c">Solução: agrupa o(s) projeto(s)</span>
+├─ global.json              <span class="c">Trava o SDK em .NET 8 (todas as máquinas iguais)</span>
+├─ README.md                <span class="c">Setup, como rodar, fluxo de equipe</span>
+├─ .gitignore               <span class="c">O que o Git ignora (bin, obj, *.db...)</span>
+├─ .gitattributes           <span class="c">Normaliza fim de linha entre Windows/Mac/Linux</span>
+│
+└─ <b>PokeDraft.Web/</b>              <span class="c">O projeto web (backend + telas + estáticos)</span>
+   ├─ PokeDraft.Web.csproj   <span class="c">Definição do projeto e pacotes NuGet</span>
+   ├─ Program.cs             <span class="c">Liga tudo: middlewares + registra o banco</span>
+   ├─ appsettings.json       <span class="c">Configuração (connection string do SQLite)</span>
+   ├─ appsettings.Development.json  <span class="c">Configuração só do ambiente de dev (logs)</span>
+   │
+   ├─ <b>Controllers/</b>           <span class="c">Recebem requisições e respondem (MVC + API)</span>
+   │  └─ HomeController.cs
+   │
+   ├─ <b>Models/</b>
+   │  ├─ <b>Entities/</b>           <span class="c">Classes do domínio — cada uma vira uma tabela</span>
+   │  │  ├─ Pokemon.cs      Item.cs         Jogador.cs
+   │  │  ├─ Configuracao.cs Partida.cs      PokemonNoPool.cs
+   │  │  ├─ ItemNoPool.cs   EscolhaPokemon.cs
+   │  │  └─ MovimentacaoDraft.cs  ConfrontoBatalha.cs
+   │  ├─ <b>Enums/</b>              <span class="c">Listas de valores fixos</span>
+   │  │  ├─ TipoPokemon.cs  StatusPartida.cs  TipoMovimentacao.cs
+   │  └─ ErrorViewModel.cs  <span class="c">Model da tela de erro (do template)</span>
+   │
+   ├─ <b>Data/</b>
+   │  └─ PokeDraftDbContext.cs  <span class="c">A "ponte" entre as classes e o banco</span>
+   │
+   ├─ <b>Migrations/</b>           <span class="c">Histórico de mudanças do banco (versionado!)</span>
+   │  ├─ 20260828125500_InicialCreate.cs
+   │  ├─ 20260828125500_InicialCreate.Designer.cs
+   │  └─ PokeDraftDbContextModelSnapshot.cs
+   │
+   ├─ <b>Views/</b>                <span class="c">HTML dinâmico (.cshtml)</span>
+   │  ├─ Home/Index.cshtml   Home/Privacy.cshtml
+   │  ├─ Shared/_Layout.cshtml       <span class="c">Moldura comum a todas as páginas</span>
+   │  ├─ Shared/_Layout.cshtml.css   Shared/Error.cshtml
+   │  ├─ Shared/_ValidationScriptsPartial.cshtml
+   │  ├─ _ViewImports.cshtml <span class="c">usings globais das views</span>
+   │  └─ _ViewStart.cshtml   <span class="c">define o layout padrão</span>
+   │
+   ├─ <b>wwwroot/</b>              <span class="c">Arquivos servidos direto ao navegador</span>
+   │  ├─ css/site.css        js/site.js        favicon.ico
+   │  └─ lib/                <span class="c">Bootstrap + jQuery (bibliotecas prontas)</span>
+   │
+   ├─ Properties/launchSettings.json  <span class="c">Portas/URLs ao rodar local</span>
+   └─ pokedraft.db           <span class="c">O banco (NÃO vai pro Git — cada um gera o seu)</span>
+</div>
+
+<h2 class="page-break">5. Arquivo por arquivo</h2>
+
+<h3>Raiz do repositório</h3>
+<table>
+  <tr><th>Arquivo</th><th>O que faz</th></tr>
+  <tr><td class="mono">PokeDraft.sln</td><td>“Solução” do Visual Studio: uma lista de projetos que fazem parte do sistema. Hoje só tem o <code>PokeDraft.Web</code>. É o que você abre no VS.</td></tr>
+  <tr><td class="mono">global.json</td><td>Fixa a versão do .NET em <b>8</b>. Sem isso, um PC com .NET 10 poderia compilar diferente de um com .NET 8.</td></tr>
+  <tr><td class="mono">README.md</td><td>Instruções do projeto (pré-requisitos, como rodar, como trabalhar em equipe). É a primeira coisa que aparece no GitHub.</td></tr>
+  <tr><td class="mono">.gitignore</td><td>Lista de coisas que o Git <b>não</b> versiona: pastas <code>bin/</code> e <code>obj/</code> (resultado da compilação) e o arquivo <code>*.db</code>.</td></tr>
+  <tr><td class="mono">.gitattributes</td><td>Padroniza o “fim de linha” dos arquivos. Evita que o Git marque um arquivo inteiro como modificado só porque foi salvo em outro sistema operacional.</td></tr>
+</table>
+
+<h3>Configuração do projeto</h3>
+<table>
+  <tr><th>Arquivo</th><th>O que faz</th></tr>
+  <tr><td class="mono">PokeDraft.Web.csproj</td><td>O “coração” do projeto: qual versão do .NET usar e quais <b>pacotes NuGet</b> estão instalados (aqui: <code>EntityFrameworkCore.Sqlite</code>, <code>.Design</code> e <code>.Tools</code>).</td></tr>
+  <tr><td class="mono">Program.cs</td><td>Ponto de partida da aplicação. Registra os serviços (Controllers, Views e o <b>banco de dados</b> via <code>AddDbContext&lt;PokeDraftDbContext&gt;</code> com SQLite) e monta o pipeline HTTP (rotas, arquivos estáticos, etc.).</td></tr>
+  <tr><td class="mono">appsettings.json</td><td>Configurações da aplicação em formato JSON. O mais importante para nós é a <b>connection string</b>: <code>"PokeDraftDb": "Data Source=pokedraft.db"</code> — onde fica o arquivo do banco.</td></tr>
+  <tr><td class="mono">appsettings.Development.json</td><td>Configurações que valem <b>só em desenvolvimento</b> (basicamente o nível de detalhe dos logs).</td></tr>
+  <tr><td class="mono">Properties/launchSettings.json</td><td>Define os endereços/portas usados quando você roda <code>dotnet run</code> localmente. Não afeta produção.</td></tr>
+</table>
+
+<h3>Backend — Controllers</h3>
+<table>
+  <tr><th>Arquivo</th><th>O que faz</th></tr>
+  <tr><td class="mono">Controllers/HomeController.cs</td><td>Controller da página inicial (veio do template). Um <b>Controller</b> recebe a requisição do navegador, busca o que precisa e decide o que devolver (uma View ou um JSON). É aqui que vão nascer <code>PokemonController</code>, <code>PartidaController</code>, etc.</td></tr>
+</table>
+
+<h3>Backend — Models (o domínio)</h3>
+<p>Cada classe em <code>Models/Entities/</code> representa uma “coisa” do sistema e vira uma <b>tabela</b> no banco. As propriedades viram <b>colunas</b>.</p>
+<table>
+  <tr><th>Classe</th><th>Representa</th><th>Campos principais</th></tr>
+  <tr><td class="mono">Pokemon</td><td>Um Pokémon do catálogo (vem da PokéAPI).</td><td>Nome, Tipo1/Tipo2, os 6 status base, Geração, SpriteUrl, Custo, PokeApiId.</td></tr>
+  <tr><td class="mono">Item</td><td>Um item de batalha do catálogo.</td><td>Nome, Descrição, Categoria, BonusOverall, Custo.</td></tr>
+  <tr><td class="mono">Jogador</td><td>Uma pessoa que joga partidas.</td><td>Nome, CriadoEm.</td></tr>
+  <tr><td class="mono">Configuracao</td><td>Um “preset” de regras do draft, reutilizável.</td><td>BudgetPontos, QuantidadeSamples, PokemonPorSample, TamanhoTime, BansPorJogador, FatorVenda.</td></tr>
+  <tr><td class="mono">Partida</td><td>Uma disputa entre 2 jogadores. É a entidade central.</td><td>Status (enum), JogadorA/JogadorB, Configuração, Vencedor, PontosJogadorA/B.</td></tr>
+  <tr><td class="mono">PokemonNoPool</td><td>Um Pokémon sorteado para um sample do draft de uma partida.</td><td>PartidaId, PokemonId, NumeroSample, Banido, CompradoPorJogadorId.</td></tr>
+  <tr><td class="mono">ItemNoPool</td><td>Um item disponível no pacote de itens de uma partida.</td><td>PartidaId, ItemId, AdquiridoPorJogadorId.</td></tr>
+  <tr><td class="mono">EscolhaPokemon</td><td>Um Pokémon que um jogador comprou e pôs no time.</td><td>Pokémon, Item equipado, Natureza + 6 IVs, OrdemNaBatalha, PontosGastos, Vendida.</td></tr>
+  <tr><td class="mono">MovimentacaoDraft</td><td>Registro de cada ação no draft (histórico/auditoria).</td><td>Tipo (enum), Pokémon/Item, VariacaoPontos, SaldoResultante, Momento.</td></tr>
+  <tr><td class="mono">ConfrontoBatalha</td><td>Um duelo 1×1 dentro da batalha simulada.</td><td>Ordem, EscolhaPokemonA/B, OverallA/B, VencedorJogadorId.</td></tr>
+</table>
+<p>E os <code>Models/Enums/</code> (listas de valores fixos):</p>
+<table>
+  <tr><th>Enum</th><th>Valores</th></tr>
+  <tr><td class="mono">TipoPokemon</td><td>Os 18 tipos (Normal, Fogo, Água, ...). Usado para calcular vantagem de tipagem.</td></tr>
+  <tr><td class="mono">StatusPartida</td><td>Configuracao → Draft → Batalha → Finalizada.</td></tr>
+  <tr><td class="mono">TipoMovimentacao</td><td>Banimento, CompraPokemon, VendaPokemon, EquiparItem, RemoverItem.</td></tr>
+  <tr><td class="mono">ErrorViewModel</td><td>(em <code>Models/</code>) model da tela de erro padrão — do template, não mexemos.</td></tr>
+</table>
+
+<h3 class="page-break">Backend — Data e Migrations</h3>
+<table>
+  <tr><th>Arquivo</th><th>O que faz</th></tr>
+  <tr><td class="mono">Data/PokeDraftDbContext.cs</td><td>A <b>ponte</b> entre as classes e o banco. Tem um <code>DbSet&lt;T&gt;</code> por entidade (= uma tabela), configura os <b>relacionamentos</b> (quem aponta para quem, o que acontece ao apagar), os <b>índices</b> e um <b>dado inicial</b> (uma <code>Configuracao</code> “Padrão”).</td></tr>
+  <tr><td class="mono">Migrations/…_InicialCreate.cs</td><td>A primeira <b>migration</b>. Método <code>Up()</code> = comandos que criam todas as tabelas; <code>Down()</code> = como desfazer. Gerado automaticamente pelo comando <code>dotnet ef migrations add</code>.</td></tr>
+  <tr><td class="mono">Migrations/…_InicialCreate.Designer.cs</td><td>Metadados dessa migration (usado pelo EF Core internamente). Não se edita à mão.</td></tr>
+  <tr><td class="mono">Migrations/PokeDraftDbContextModelSnapshot.cs</td><td>“Foto” do estado atual do modelo. O EF compara com as suas classes para descobrir o que mudou quando você cria a próxima migration.</td></tr>
+</table>
+
+<h3>Frontend — Views</h3>
+<table>
+  <tr><th>Arquivo</th><th>O que faz</th></tr>
+  <tr><td class="mono">Views/Home/Index.cshtml</td><td>A página inicial. Hoje só mostra um texto de boas-vindas do PokéDraft.</td></tr>
+  <tr><td class="mono">Views/Home/Privacy.cshtml</td><td>Página de privacidade (do template).</td></tr>
+  <tr><td class="mono">Views/Shared/_Layout.cshtml</td><td>A <b>moldura</b> HTML comum a todas as páginas: <code>&lt;head&gt;</code>, menu de navegação, rodapé e o ponto onde o conteúdo de cada página entra (<code>@RenderBody()</code>).</td></tr>
+  <tr><td class="mono">Views/Shared/_Layout.cshtml.css</td><td>CSS que vale só para o layout.</td></tr>
+  <tr><td class="mono">Views/Shared/Error.cshtml</td><td>Tela mostrada quando dá erro não tratado.</td></tr>
+  <tr><td class="mono">Views/Shared/_ValidationScriptsPartial.cshtml</td><td>Bloco de scripts para validação de formulários no navegador.</td></tr>
+  <tr><td class="mono">Views/_ViewImports.cshtml</td><td><code>@using</code> e “tag helpers” que valem para todas as views (evita repetir em cada arquivo).</td></tr>
+  <tr><td class="mono">Views/_ViewStart.cshtml</td><td>Diz qual é o layout padrão (<code>_Layout</code>) de todas as views.</td></tr>
+</table>
+
+<h3>Frontend — wwwroot</h3>
+<table>
+  <tr><th>Arquivo</th><th>O que faz</th></tr>
+  <tr><td class="mono">wwwroot/css/site.css</td><td>CSS do site (nossas customizações de estilo vão aqui).</td></tr>
+  <tr><td class="mono">wwwroot/js/site.js</td><td>JavaScript do site. É daqui que vamos chamar a API com <code>fetch()</code>.</td></tr>
+  <tr><td class="mono">wwwroot/favicon.ico</td><td>Ícone da aba do navegador.</td></tr>
+  <tr><td class="mono">wwwroot/lib/</td><td>Bibliotecas prontas: <b>Bootstrap</b> (estilos) e <b>jQuery</b>. Vieram com o template; não editamos.</td></tr>
+</table>
+<div class="callout">
+  <b>Regra de ouro do MVC:</b> só o que está em <code>wwwroot/</code> o navegador acessa diretamente. CSS/JS fora dessa pasta não carregam.
+</div>
+
+<h2 class="page-break">6. As tabelas do banco (resumo)</h2>
+<table>
+  <tr><th>Tabela</th><th>Papel no jogo</th></tr>
+  <tr><td class="mono">Pokemons</td><td>Catálogo de Pokémon (importado da PokéAPI).</td></tr>
+  <tr><td class="mono">Itens</td><td>Catálogo de itens de batalha.</td></tr>
+  <tr><td class="mono">Jogadores</td><td>As pessoas que jogam.</td></tr>
+  <tr><td class="mono">Configuracoes</td><td>Presets de regras (já vem uma “Padrão” cadastrada).</td></tr>
+  <tr><td class="mono">Partidas</td><td>Cada disputa entre 2 jogadores.</td></tr>
+  <tr><td class="mono">PokemonNoPool</td><td>Pokémon sorteados nos samples de cada partida.</td></tr>
+  <tr><td class="mono">ItensNoPool</td><td>Itens disponíveis no pacote de itens de cada partida.</td></tr>
+  <tr><td class="mono">EscolhasPokemon</td><td>Os Pokémon que cada jogador comprou (com item, natureza, IVs, ordem).</td></tr>
+  <tr><td class="mono">MovimentacoesDraft</td><td>Histórico de ban / compra / venda / equipar item.</td></tr>
+  <tr><td class="mono">ConfrontosBatalha</td><td>Os duelos 1×1 da batalha simulada e seus resultados.</td></tr>
+  <tr><td class="mono">__EFMigrationsHistory</td><td>Controle interno do EF: quais migrations já foram aplicadas.</td></tr>
+</table>
+
+<h2>7. Conceitos rápidos</h2>
+
+<h3>MVC (Model — View — Controller)</h3>
+<p>Jeito de separar responsabilidades: <b>Model</b> = os dados e as regras · <b>Controller</b> = recebe o pedido e coordena · <b>View</b> = o HTML que o usuário vê. Analogia do restaurante: cozinha (Model), garçom (Controller), mesa servida (View).</p>
+
+<h3>Entity Framework Core</h3>
+<p>É o <b>ORM</b>: em vez de escrever SQL na mão, você mexe em objetos C# e o EF traduz para o banco. <code>_context.Pokemons.Add(p)</code> + <code>SaveChanges()</code> vira um <code>INSERT</code>.</p>
+
+<h3>Migration</h3>
+<p>Um “commit” do formato do banco. Fluxo: você muda/cria classes em <code>Models/Entities/</code> → roda os comandos abaixo → o EF gera o código e aplica no seu <code>pokedraft.db</code>.</p>
+<pre>dotnet ef migrations add NomeDaMudanca --project PokeDraft.Web
+dotnet ef database update --project PokeDraft.Web</pre>
+<div class="callout warn">
+  A pasta <code>Migrations/</code> <b>vai para o Git</b> junto com a mudança nas classes. O arquivo <code>pokedraft.db</code> <b>não vai</b>. Quem dá <code>git pull</code> e recebe migrations novas roda só <code>dotnet ef database update</code>.
+</div>
+
+<h3>API + fetch</h3>
+<p>O Controller devolve <b>JSON</b>; o JavaScript no navegador chama com <code>fetch()</code> e monta a tela. Verbos: <code>GET</code> busca · <code>POST</code> cria · <code>PUT</code> atualiza · <code>DELETE</code> remove. A rota no JS tem que ser <b>idêntica</b> à rota do Controller.</p>
+<pre>const resp = await fetch("/api/pokemons");
+const lista = await resp.json();</pre>
+
+<h3>Git — o básico do dia a dia</h3>
+<pre>git pull                      # traz o que os colegas subiram
+git checkout -b feat/minha-tarefa   # cria um branch para a tarefa
+# ... edita, testa com: dotnet build ...
+git add .
+git commit -m "mensagem clara do que foi feito"
+git push -u origin feat/minha-tarefa # sobe o branch
+# abre um Pull Request no GitHub para juntar na main</pre>
+
+<h2>8. Fluxo de trabalho da equipe</h2>
+<ul>
+  <li>A branch <code>main</code> tem que <b>sempre compilar e rodar</b>. Ninguém commita direto nela — cada tarefa em um branch + Pull Request.</li>
+  <li>Antes de commitar: <code>dotnet build</code> sem erros.</li>
+  <li>Deu <code>git pull</code> e veio migration nova? Rode <code>dotnet ef database update</code>.</li>
+  <li>Cada card do Trello = uma tarefa de uma aula. Mova o card para "Em desenvolvimento" quando começar e para "Concluído" quando o PR entrar.</li>
+</ul>
+
+<h2>9. Próximas aulas</h2>
+<table>
+  <tr><th>Data</th><th>Entrega</th></tr>
+  <tr><td>04/09</td><td>Importador da PokéAPI + CRUD de Pokémon na API</td></tr>
+  <tr><td>11/09</td><td>CRUD de Jogador, Partida e Configuração + esqueleto do frontend</td></tr>
+  <tr><td>18/09</td><td><b>Marco:</b> protótipo navegável — criar partida e sortear o pool</td></tr>
+  <tr><td>02/10</td><td>Motor do draft: ban, compra, validações, controle de saldo</td></tr>
+  <tr><td>09/10</td><td>Venda + trava anti-beco-sem-saída + histórico de movimentações</td></tr>
+  <tr><td>16/10</td><td><b>Marco:</b> MVP integrado — tela do draft ponta a ponta</td></tr>
+  <tr><td>23/10</td><td>Polimento visual, sprites, feedback de erro, responsividade</td></tr>
+  <tr><td>30/10</td><td><b>Marco:</b> versão candidata — testes, casos de borda, bugs</td></tr>
+  <tr><td>06/11</td><td>Congelamento do código, README final, ensaio da defesa</td></tr>
+</table>
+
+<p class="foot">Repositório: github.com/eduardowoz/PokeDraft-DesenvolvimentoSoftwereVIsual &nbsp;·&nbsp; Trello: trello.com/b/oK9mxrKm</p>
+
+</body>
+</html>
