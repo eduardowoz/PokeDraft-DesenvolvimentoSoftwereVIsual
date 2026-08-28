@@ -1,0 +1,17 @@
+# Normaliza fim de linha: o Git guarda LF no repositório e converte para o
+# padrão do SO ao fazer checkout. Evita "arquivo inteiro modificado" entre as máquinas.
+* text=auto
+
+*.cs      text diff=csharp
+*.csproj  text
+*.sln     text eol=crlf
+*.cshtml  text
+*.json    text
+*.md      text
+*.css     text
+*.js      text
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.db  binary
