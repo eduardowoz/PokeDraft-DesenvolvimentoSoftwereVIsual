@@ -487,3 +487,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# o banco do PokeDraft e versionado de proposito (catalogo + estado do grupo)
+!pokedraft.db

@@ -1,0 +1,101 @@
+@{
+    ViewData["Title"] = "Pokedraft - Draft de Itens";
+}
+
+<div class="draft-container">
+    <!-- Painel Lateral: Jogador 1 -->
+    <aside id="painelJogadorUm" class="player-panel shadow-soft">
+        <div class="player-header">
+            <h2 id="nomeJogadorUm" class="h5 fw-bold text-dark m-0">Jogador 1</h2>
+        </div>
+        <div class="player-avatar-box my-3">
+            <img id="spriteJogadorUm" alt="Sprite do Jogador 1" class="player-sprite" />
+        </div>
+        <div class="player-budget-box mb-3">
+            <span class="text-muted small">Orçamento</span>
+            <div class="fw-bold text-success fs-5"><span id="budgetJogadorUm">0</span> Pts</div>
+        </div>
+        
+        <div class="player-team-section mb-3">
+            <h3 class="h6 fw-semibold text-secondary border-bottom pb-2 mb-2">Equipe</h3>
+            <div id="equipeJogadorUm" class="pokemons-jogador"></div>
+        </div>
+
+        <div class="escolher-pokemon mb-3">
+            <label for="selectPokemonItemJogadorUm" class="form-label small fw-semibold text-muted mb-1">
+                Receber item no Pokémon:
+            </label>
+            <select id="selectPokemonItemJogadorUm" class="form-select form-select-sm">
+                <option value="">Selecione um Pokémon</option>
+            </select>
+        </div>
+
+        <div class="player-items-section mt-auto pt-3 border-top">
+            <h3 class="h6 fw-semibold text-secondary mb-2">Itens Equipados</h3>
+            <div id="itensJogadorUm" class="itens-jogador d-flex flex-wrap gap-2"></div>
+        </div>
+    </aside>
+
+    <!-- Área Central: Vitrine de Itens (Estilo PC Pokémon) -->
+    <section id="areaDraft" class="pc-pokemon-container shadow-soft">
+        <div class="pc-screen-header d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="h5 fw-bold text-dark m-0 titulo-com-pokebola"><span class="pokebola" aria-hidden="true"></span>Mercado de Itens</h2>
+                <p id="indicadorVez" class="text-danger small fw-semibold m-0 mt-1">Turno do jogador</p>
+            </div>
+        </div>
+
+        <!-- Tela centralizada estilo PC -->
+        <div class="pc-box-viewport">
+            <div id="listaItens" class="lista-itens">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </div>
+
+        <div class="iniciar-batalha mt-3 pt-3 border-top d-flex justify-content-between align-items-center">
+            <p id="mensagemIniciarBatalha" class="text-muted small m-0">
+                Draft de itens.
+            </p>
+            <button id="botaoIniciarBatalha" type="button" class="btn btn-success btn-sm fw-semibold" disabled>
+                Iniciar Batalha
+            </button>
+        </div>
+    </section>
+
+    <!-- Painel Lateral: Jogador 2 -->
+    <aside id="painelJogadorDois" class="player-panel shadow-soft">
+        <div class="player-header">
+            <h2 id="nomeJogadorDois" class="h5 fw-bold text-dark m-0">Jogador 2</h2>
+        </div>
+        <div class="player-avatar-box my-3">
+            <img id="spriteJogadorDois" alt="Sprite do Jogador 2" class="player-sprite" />
+        </div>
+        <div class="player-budget-box mb-3">
+            <span class="text-muted small">Orçamento</span>
+            <div class="fw-bold text-success fs-5"><span id="budgetJogadorDois">0</span> Pts</div>
+        </div>
+        
+        <div class="player-team-section mb-3">
+            <h3 class="h6 fw-semibold text-secondary border-bottom pb-2 mb-2">Equipe</h3>
+            <div id="equipeJogadorDois" class="pokemons-jogador"></div>
+        </div>
+
+        <div class="escolher-pokemon mb-3">
+            <label for="selectPokemonItemJogadorDois" class="form-label small fw-semibold text-muted mb-1">
+                Receber item no Pokémon:
+            </label>
+            <select id="selectPokemonItemJogadorDois" class="form-select form-select-sm">
+                <option value="">Selecione um Pokémon</option>
+            </select>
+        </div>
+
+        <div class="player-items-section mt-auto pt-3 border-top">
+            <h3 class="h6 fw-semibold text-secondary mb-2">Itens Equipados</h3>
+            <div id="itensJogadorDois" class="itens-jogador d-flex flex-wrap gap-2"></div>
+        </div>
+    </aside>
+</div>
+
+@section Scripts {
+    <script src="~/js/itens.js" asp-append-version="true"></script>
+}

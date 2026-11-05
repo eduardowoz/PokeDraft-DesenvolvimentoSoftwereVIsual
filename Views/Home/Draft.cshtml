@@ -1,0 +1,109 @@
+@{
+    ViewData["Title"] = "Pokedraft - Sala de Draft";
+}
+
+<div class="draft-container">
+    <!-- Painel Lateral: Jogador 1 -->
+    <aside id="painelJogadorUm" class="player-panel shadow-soft">
+        <div class="player-header">
+            <h2 id="nomeJogadorUm" class="h5 fw-bold text-dark m-0">Jogador 1</h2>
+        </div>
+        <div class="player-avatar-box my-3">
+            <img id="spriteJogadorUm" alt="Sprite do Jogador 1" class="player-sprite" />
+        </div>
+        <div class="player-budget-box mb-3">
+            <span class="text-muted small">Orçamento</span>
+            <div class="fw-bold text-success fs-5"><span id="budgetJogadorUm">0</span> Pts</div>
+        </div>
+        
+        <div class="player-team-section">
+            <h3 class="h6 fw-semibold text-secondary border-bottom pb-2 mb-2">Equipe Selecionada</h3>
+            <div id="pokemonsJogadorUm" class="pokemons-jogador"></div>
+        </div>
+
+        <div class="venda-pokemon mt-auto pt-3 border-top">
+            <h4 class="small fw-bold text-muted mb-2">Vender Pokémon</h4>
+            <select id="selectVendaJogadorUm" class="form-select form-select-sm mb-2">
+                <option value="">Selecione um Pokémon</option>
+            </select>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">Reembolso (75%):</small>
+                <span class="fw-bold text-danger"><span id="valorVendaJogadorUm">0</span> Pts</span>
+            </div>
+            <button id="botaoVendaJogadorUm" type="button" class="btn btn-outline-danger btn-sm w-100 fw-semibold">
+                Vender
+            </button>
+        </div>
+    </aside>
+
+    <!-- Área Central: O Computador do PC Pokemon (Fundo clássico do FireRed) -->
+    <section id="areaDraft" class="pc-pokemon-container shadow-soft">
+        <div class="pc-screen-header d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="h5 fw-bold text-dark m-0 titulo-com-pokebola"><span class="pokebola" aria-hidden="true"></span>Banco de Dados - PC Pokémon</h2>
+                <p id="indicadorVez" class="text-danger small fw-semibold m-0 mt-1">Aguardando turno...</p>
+            </div>
+            <div class="controles-draft d-flex gap-2">
+                <button id="botaoNovoTipo" type="button" class="btn btn-secondary btn-sm">
+                    Sortear Tipo
+                </button>
+                <button id="botaoNovaGeracao" type="button" class="btn btn-secondary btn-sm">
+                    Sortear Geração
+                </button>
+            </div>
+        </div>
+
+        <!-- Tela estilo PC Pokémon FireRed (Fundo verde clássico com moldura estilizada) -->
+        <div class="pc-box-viewport">
+            <div id="listaPokemons" class="lista-pokemons">
+                <!-- Inserido dinamicamente via JS -->
+            </div>
+        </div>
+
+        <div class="iniciar-draft-itens mt-3 pt-3 border-top d-flex justify-content-between align-items-center">
+            <p id="mensagemDraftItens" class="text-muted small m-0">
+                Cada jogador precisa ter pelo menos 6 Pokémon na equipe.
+            </p>
+            <button id="botaoIniciarDraftItens" type="button" class="btn btn-success btn-sm fw-semibold" disabled>
+                Iniciar Draft de Itens
+            </button>
+        </div>
+    </section>
+
+    <!-- Painel Lateral: Jogador 2 -->
+    <aside id="painelJogadorDois" class="player-panel shadow-soft">
+        <div class="player-header">
+            <h2 id="nomeJogadorDois" class="h5 fw-bold text-dark m-0">Jogador 2</h2>
+        </div>
+        <div class="player-avatar-box my-3">
+            <img id="spriteJogadorDois" alt="Sprite do Jogador 2" class="player-sprite" />
+        </div>
+        <div class="player-budget-box mb-3">
+            <span class="text-muted small">Orçamento</span>
+            <div class="fw-bold text-success fs-5"><span id="budgetJogadorDois">0</span> Pts</div>
+        </div>
+        
+        <div class="player-team-section">
+            <h3 class="h6 fw-semibold text-secondary border-bottom pb-2 mb-2">Equipe Selecionada</h3>
+            <div id="pokemonsJogadorDois" class="pokemons-jogador"></div>
+        </div>
+
+        <div class="venda-pokemon mt-auto pt-3 border-top">
+            <h4 class="small fw-bold text-muted mb-2">Vender Pokémon</h4>
+            <select id="selectVendaJogadorDois" class="form-select form-select-sm mb-2">
+                <option value="">Selecione um Pokémon</option>
+            </select>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">Reembolso (75%):</small>
+                <span class="fw-bold text-danger"><span id="valorVendaJogadorDois">0</span> Pts</span>
+            </div>
+            <button id="botaoVendaJogadorDois" type="button" class="btn btn-outline-danger btn-sm w-100 fw-semibold">
+                Vender
+            </button>
+        </div>
+    </aside>
+</div>
+
+@section Scripts{
+    <script src="~/js/draft.js" asp-append-version="true"></script>
+}

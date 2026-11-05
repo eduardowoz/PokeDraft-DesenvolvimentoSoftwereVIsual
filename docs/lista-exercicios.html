@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Lista de Exercícios — C# / ASP.NET Core</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 16mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: -apple-system,"Segoe UI",Roboto,Arial,sans-serif; font-size: 10pt; line-height: 1.5; color: #1a1a2e; margin: 0; }
+  h1,h2,h3,h4 { font-family: Georgia,"Times New Roman",serif; color: #0f2b46; line-height: 1.2; }
+  h1 { font-size: 27pt; margin: 0 0 4pt; }
+  h2 { font-size: 16pt; margin: 20pt 0 8pt; padding: 3pt 0 5pt; border-bottom: 2.5px solid #12a594; }
+  h3 { font-size: 12.5pt; margin: 14pt 0 5pt; color: #14324f; }
+  h4 { font-size: 10.5pt; margin: 10pt 0 3pt; color: #0f2b46; font-family: -apple-system,"Segoe UI",sans-serif; font-weight: 700; }
+  p { margin: 5pt 0; }
+  code, .mono { font-family: "Consolas","SFMono-Regular",Menlo,monospace; font-size: 8.8pt; background: #eef2f5; padding: 1px 4px; border-radius: 3px; color: #0f2b46; }
+  th code { background: rgba(255,255,255,.18); color: #fff; }
+  pre { font-family: "Consolas",monospace; font-size: 8.5pt; line-height: 1.45; background: #0f2b46; color: #e8eef3; padding: 9pt 11pt; border-radius: 5px; white-space: pre-wrap; word-break: break-word; margin: 6pt 0; }
+  pre .cm { color: #7fb0c9; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 8.8pt; }
+  th, td { text-align: left; vertical-align: top; padding: 4pt 6pt; border: 1px solid #cdd8e0; }
+  th { background: #0f2b46; color: #fff; font-family: -apple-system,"Segoe UI",sans-serif; font-size: 8.5pt; }
+  tr:nth-child(even) td { background: #f4f7f9; }
+  td.mono { font-family: "Consolas",monospace; }
+  .lead { font-size: 11.5pt; color: #3a4a5a; }
+  .tag { display: inline-block; background: #12a594; color: #fff; font-size: 7.5pt; font-weight: 700; letter-spacing: .6px; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; }
+  .callout { background: #e7f6f4; border-left: 4px solid #12a594; padding: 7pt 11pt; border-radius: 0 5px 5px 0; margin: 8pt 0; }
+  .callout.warn { background: #fdf0e3; border-left-color: #e08a2b; }
+  .callout.rule { background: #eef2f7; border-left-color: #0f2b46; }
+  .muted { color: #6a7784; }
+  .page-break { page-break-before: always; }
+  ul, ol { margin: 5pt 0; padding-left: 17pt; }
+  li { margin: 2.5pt 0; }
+  .foot { font-size: 8.5pt; color: #6a7784; }
+
+  /* ---- blocos de exercício ---- */
+  .ex { border: 1px solid #cdd8e0; border-left: 4px solid #12a594; border-radius: 0 5px 5px 0; padding: 7pt 11pt; margin: 8pt 0; background: #fbfcfd; }
+  .ex .h { font-weight: 700; color: #0f2b46; font-size: 10.2pt; margin-bottom: 2pt; }
+  .ex .num { font-family: "Consolas",monospace; color: #12a594; font-weight: 700; }
+  .ex p { margin: 3pt 0; }
+  .ex .ok { font-size: 8.8pt; color: #2a6b60; background: #e7f6f4; padding: 4pt 8pt; border-radius: 4px; margin-top: 5pt; }
+  .ex .ok b { color: #17564c; }
+  .ex.desafio { border-left-color: #e08a2b; background: #fffdfa; }
+  .ex.desafio .ok { color: #8a5514; background: #fdf0e3; }
+  .dif { float: right; font-family: "Consolas",monospace; font-size: 9pt; color: #12a594; letter-spacing: 1px; }
+  .ex.desafio .dif { color: #e08a2b; }
+  .nivel-head { background: #0f2b46; color: #fff; padding: 8pt 12pt; border-radius: 5px; margin: 18pt 0 8pt; }
+  .nivel-head h2 { color: #fff; border: 0; margin: 0; padding: 0; font-size: 15pt; }
+  .nivel-head .sub { font-size: 9pt; color: #a9c4d6; margin-top: 2pt; }
+  .toc { font-size: 9.5pt; }
+  .toc div { padding: 2pt 0; border-bottom: 1px dotted #cdd8e0; }
+  .toc .n { display: inline-block; width: 46pt; color: #12a594; font-weight: 700; font-family: "Consolas",monospace; }
+  h2, h3, h4, .nivel-head { page-break-after: avoid; }
+  table, pre, .callout, .ex { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div>
+  <span class="tag">Desenvolvimento de Software Visual · 2026</span>
+  <h1>Lista de Exercícios</h1>
+  <p style="font-family:Georgia,serif;font-size:14pt;color:#12a594;font-weight:700;margin:2pt 0 8pt">
+    C# · Orientação a Objetos · ASP.NET Core MVC · EF Core · API
+  </p>
+  <p class="lead">
+    72 exercícios em 10 níveis, do zero até um pouco além do que já vimos em aula.
+    Cada exercício traz o enunciado, o que ele treina e um critério objetivo de
+    "está pronto quando…".
+  </p>
+</div>
+
+<h2>Como usar esta lista</h2>
+<ul>
+  <li><b>Faça na ordem.</b> Os níveis são cumulativos: o 6 assume que você fez o 2 e o 3.</li>
+  <li><b>Digite o código, não copie.</b> O objetivo é errar, ler a mensagem de erro e corrigir — é assim que se aprende.</li>
+  <li><b>Um projeto por nível.</b> Níveis 1 a 4 são projetos de console (<code>dotnet new console</code>). Do 5 em diante, um projeto web (<code>dotnet new mvc</code>).</li>
+  <li><b>Commite tudo.</b> Crie um repositório <code>exercicios-csharp</code> e faça um commit por exercício. Serve de treino de Git e de portfólio.</li>
+  <li><b>Não precisa terminar tudo antes da próxima aula.</b> Meta razoável: níveis 1–4 na primeira semana, 5–6 na segunda, 7–8 na terceira.</li>
+</ul>
+
+<table>
+  <tr><th style="width:16%">Marcação</th><th>Significado</th></tr>
+  <tr><td class="mono">●○○</td><td>Fundamento. Se travar aqui, revise a aula antes de seguir.</td></tr>
+  <tr><td class="mono">●●○</td><td>Aplicação. Junta duas ou três coisas que você já viu.</td></tr>
+  <tr><td class="mono">●●●</td><td>Integração. Exige pensar na estrutura, não só na sintaxe.</td></tr>
+  <tr><td style="color:#e08a2b"><b>Desafio</b></td><td>Opcional. Vai além do conteúdo da disciplina — faça se sobrar tempo.</td></tr>
+</table>
+
+<h3>Índice dos níveis</h3>
+<div class="toc">
+  <div><span class="n">Nível 0</span> Preparação do ambiente e Git <span class="muted">· 3 exercícios</span></div>
+  <div><span class="n">Nível 1</span> Fundamentos de C#: tipos, condições, laços, métodos <span class="muted">· 9 exercícios</span></div>
+  <div><span class="n">Nível 2</span> POO parte 1: classes, objetos, construtores, encapsulamento <span class="muted">· 8 exercícios</span></div>
+  <div><span class="n">Nível 3</span> POO parte 2: herança, interfaces, polimorfismo, camadas <span class="muted">· 8 exercícios</span></div>
+  <div><span class="n">Nível 4</span> Coleções e LINQ <span class="muted">· 8 exercícios</span></div>
+  <div><span class="n">Nível 5</span> Primeiro projeto web: MVC, Controllers e Views <span class="muted">· 8 exercícios</span></div>
+  <div><span class="n">Nível 6</span> Banco de dados: EF Core + SQLite e migrations <span class="muted">· 8 exercícios</span></div>
+  <div><span class="n">Nível 7</span> API REST: CRUD completo em JSON <span class="muted">· 8 exercícios</span></div>
+  <div><span class="n">Nível 8</span> Frontend consumindo a API com <code>fetch</code> <span class="muted">· 7 exercícios</span></div>
+  <div><span class="n">Nível 9</span> Um pouco além: serviços, API externa, paginação <span class="muted">· 5 exercícios</span></div>
+  <div><span class="n">Final</span> Projeto integrador: sistema de biblioteca</div>
+</div>
+
+<!-- =================== NÍVEL 0 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 0 — Preparação</h2>
+  <div class="sub">Antes de programar: garantir que a máquina está pronta e que você sabe versionar.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">0.1</span> &nbsp;Ambiente instalado</div>
+  <p>Instale o <b>.NET SDK 8</b>, o <b>Git</b> e o <b>VS Code</b> (com as extensões <b>C#</b> e <b>C# Dev Kit</b>). Depois, abra um terminal e rode os três comandos de verificação.</p>
+  <pre>dotnet --version
+git --version
+dotnet --list-sdks</pre>
+  <div class="ok"><b>Está pronto quando:</b> <code>dotnet --version</code> mostra <code>8.x</code> e os outros dois comandos não dão erro.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">0.2</span> &nbsp;Primeiro programa</div>
+  <p>Crie um projeto de console chamado <code>Exercicios</code>, abra no VS Code e rode. Depois altere a mensagem para o seu nome e rode de novo.</p>
+  <pre>dotnet new console -n Exercicios
+cd Exercicios
+code .
+dotnet run</pre>
+  <div class="ok"><b>Está pronto quando:</b> o terminal imprime a sua mensagem personalizada.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">0.3</span> &nbsp;Repositório de exercícios</div>
+  <p>Crie um repositório no GitHub chamado <code>exercicios-csharp</code>, conecte a pasta local e faça o primeiro push. Crie também um branch chamado <code>nivel-1</code> e volte para a <code>main</code>.</p>
+  <pre>git init
+git add .
+git commit -m "Primeiro commit"
+git branch -M main
+git remote add origin &lt;url-do-seu-repo&gt;
+git push -u origin main</pre>
+  <div class="ok"><b>Está pronto quando:</b> os arquivos aparecem no GitHub e <code>git branch</code> lista <code>main</code> e <code>nivel-1</code>.</div>
+</div>
+
+<!-- =================== NÍVEL 1 =================== -->
+<div class="nivel-head">
+  <h2>Nível 1 — Fundamentos de C#</h2>
+  <div class="sub">Tipos, entrada e saída, condições, laços de repetição e métodos. Tudo em projeto de console.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">1.1</span> &nbsp;Conversor de temperatura</div>
+  <p>Peça ao usuário uma temperatura em Celsius e mostre o valor em Fahrenheit e em Kelvin. Fórmulas: <code>F = C × 9/5 + 32</code> e <code>K = C + 273.15</code>.</p>
+  <p class="muted"><b>Treina:</b> <code>Console.ReadLine()</code>, conversão de texto para número (<code>double.Parse</code>), interpolação de string (<code>$"..."</code>).</p>
+  <div class="ok"><b>Está pronto quando:</b> digitando <code>25</code> a saída mostra <code>77</code> °F e <code>298,15</code> K.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">1.2</span> &nbsp;Classificador de faixa etária</div>
+  <p>Leia uma idade e classifique: <b>0–12</b> criança, <b>13–17</b> adolescente, <b>18–59</b> adulto, <b>60+</b> idoso. Se a idade for negativa, mostre uma mensagem de erro.</p>
+  <p class="muted"><b>Treina:</b> <code>if / else if / else</code>, operadores de comparação e lógicos.</p>
+  <div class="ok"><b>Está pronto quando:</b> os cinco casos (incluindo o negativo) dão a resposta certa. Teste os limites: 12, 13, 17, 18, 59, 60.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">1.3</span> &nbsp;Calculadora com <code>switch</code></div>
+  <p>Leia dois números e um operador (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) e mostre o resultado. Use <code>switch</code>. Trate a divisão por zero.</p>
+  <p class="muted"><b>Treina:</b> <code>switch</code>, tratamento de caso inválido (<code>default</code>).</p>
+  <div class="ok"><b>Está pronto quando:</b> as quatro operações funcionam, dividir por zero mostra aviso em vez de quebrar, e um operador inválido cai no <code>default</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">1.4</span> &nbsp;Tabuada</div>
+  <p>Peça um número e imprima a tabuada dele de 1 a 10. Depois, faça uma segunda versão que imprima <b>todas</b> as tabuadas de 1 a 10 usando laços aninhados.</p>
+  <p class="muted"><b>Treina:</b> <code>for</code>, laço dentro de laço, formatação de saída.</p>
+  <div class="ok"><b>Está pronto quando:</b> a segunda versão imprime 100 linhas organizadas, agrupadas por tabuada.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">1.5</span> &nbsp;Adivinhe o número</div>
+  <p>O programa sorteia um número de 1 a 100 (<code>new Random().Next(1, 101)</code>) e o usuário tenta adivinhar. A cada tentativa, responda "maior" ou "menor". Ao acertar, mostre em quantas tentativas conseguiu.</p>
+  <p class="muted"><b>Treina:</b> <code>while</code>, contador, <code>Random</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> o laço só termina no acerto e o número de tentativas está correto.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">1.6</span> &nbsp;Boletim escolar</div>
+  <p>Leia 4 notas, guarde em um <code>double[]</code> e calcule: média, maior nota, menor nota e a situação (média ≥ 7 aprovado; entre 5 e 7 recuperação; abaixo de 5 reprovado). <b>Cada cálculo deve estar em um método separado.</b></p>
+  <p class="muted"><b>Treina:</b> arrays, <code>foreach</code>, métodos com parâmetro e retorno.</p>
+  <div class="ok"><b>Está pronto quando:</b> o <code>Main</code> praticamente só lê os dados e chama métodos — nenhum cálculo solto dentro dele.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">1.7</span> &nbsp;Análise de texto</div>
+  <p>Leia uma frase e mostre: quantidade de caracteres, de palavras, de vogais, a frase em maiúsculas e a frase invertida.</p>
+  <p class="muted"><b>Treina:</b> <code>string</code> (<code>Length</code>, <code>Split</code>, <code>ToUpper</code>), <code>foreach</code> em <code>char</code>, <code>char.ToLower</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> "Ola Mundo" retorna 9 caracteres, 2 palavras e 4 vogais.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">1.8</span> &nbsp;Validador de senha</div>
+  <p>Leia uma senha e valide as regras: mínimo 8 caracteres, pelo menos uma maiúscula, uma minúscula, um número e um caractere especial. Mostre <b>quais</b> regras falharam, não apenas "senha inválida".</p>
+  <p class="muted"><b>Treina:</b> métodos que retornam <code>bool</code>, decomposição de um problema em partes pequenas.</p>
+  <div class="ok"><b>Está pronto quando:</b> existe um método <code>bool</code> por regra e a senha <code>abc</code> lista 4 falhas.</div>
+</div>
+
+<div class="ex desafio">
+  <div class="dif">Desafio</div>
+  <div class="h"><span class="num">1.9</span> &nbsp;Menu de console reutilizável</div>
+  <p>Junte os exercícios 1.1 a 1.8 em um único programa com um menu numerado. O programa só encerra quando o usuário escolher "0 - Sair", voltando ao menu depois de cada operação.</p>
+  <p class="muted"><b>Treina:</b> <code>while</code> com condição de saída, <code>switch</code> chamando métodos, organização do código.</p>
+  <div class="ok"><b>Está pronto quando:</b> dá para rodar qualquer exercício várias vezes seguidas sem reiniciar o programa.</div>
+</div>
+
+<!-- =================== NÍVEL 2 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 2 — POO parte 1</h2>
+  <div class="sub">Classes como moldes, objetos como instâncias. Construtores, propriedades e encapsulamento.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">2.1</span> &nbsp;Sua primeira classe</div>
+  <p>Crie a classe <code>Produto</code> com as propriedades <code>Nome</code>, <code>Preco</code> e <code>Quantidade</code>. No <code>Main</code>, crie três produtos e imprima os dados de cada um.</p>
+  <p class="muted"><b>Treina:</b> <code>class</code>, propriedades com <code>get; set;</code>, <code>new</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> a classe está em um arquivo próprio (<code>Produto.cs</code>) e os três objetos imprimem valores diferentes.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">2.2</span> &nbsp;Construtor</div>
+  <p>Adicione à <code>Produto</code> um construtor que receba nome, preço e quantidade. Crie os objetos passando os valores direto no <code>new</code>.</p>
+  <pre>var p = new Produto("Teclado", 150.00m, 3);</pre>
+  <p class="muted"><b>Treina:</b> construtor, atribuição de propriedades.</p>
+  <div class="ok"><b>Está pronto quando:</b> não é mais possível criar um produto sem informar os três dados.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">2.3</span> &nbsp;Métodos e propriedade calculada</div>
+  <p>Na <code>Produto</code>, adicione o método <code>decimal ValorTotal()</code> (preço × quantidade) e a propriedade somente-leitura <code>bool EmEstoque</code> (verdadeira se a quantidade for maior que zero).</p>
+  <pre>public bool EmEstoque =&gt; Quantidade &gt; 0;</pre>
+  <p class="muted"><b>Treina:</b> métodos de instância, propriedade calculada.</p>
+  <div class="ok"><b>Está pronto quando:</b> um produto com quantidade 0 retorna <code>EmEstoque == false</code> e <code>ValorTotal() == 0</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">2.4</span> &nbsp;Conta bancária (encapsulamento)</div>
+  <p>Crie a classe <code>ContaBancaria</code> com <code>Titular</code> e <code>Saldo</code>. O saldo <b>só pode ser lido de fora</b> — nunca alterado diretamente. Adicione os métodos <code>Depositar(valor)</code> e <code>Sacar(valor)</code>, que validam: valor tem que ser positivo, e o saque não pode deixar o saldo negativo.</p>
+  <pre>public decimal Saldo { get; <b>private set;</b> }</pre>
+  <p class="muted"><b>Treina:</b> encapsulamento, <code>private set</code>, validação dentro da classe.</p>
+  <div class="ok"><b>Está pronto quando:</b> a linha <code>conta.Saldo = 1000000;</code> <b>não compila</b>, e sacar mais do que tem retorna erro sem alterar o saldo.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">2.5</span> &nbsp;<code>ToString()</code></div>
+  <p>Sobrescreva o método <code>ToString()</code> em <code>Produto</code> para devolver algo legível, como <code>"Teclado — R$ 150,00 (3 un.)"</code>. Depois teste imprimindo o objeto direto: <code>Console.WriteLine(produto)</code>.</p>
+  <p class="muted"><b>Treina:</b> <code>override</code>, o conceito de que toda classe herda de <code>object</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> imprimir o objeto direto mostra o texto formatado em vez de <code>Exercicios.Produto</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">2.6</span> &nbsp;Enum + <code>switch</code></div>
+  <p>Crie o enum <code>StatusPedido</code> com os valores <code>Aguardando</code>, <code>Pago</code>, <code>Enviado</code>, <code>Entregue</code> e <code>Cancelado</code>. Crie a classe <code>Pedido</code> com esse status e um método <code>string DescreverStatus()</code> que use <code>switch</code> para devolver uma frase amigável.</p>
+  <p class="muted"><b>Treina:</b> <code>enum</code>, <code>switch</code> sobre enum.</p>
+  <div class="ok"><b>Está pronto quando:</b> os cinco status retornam frases diferentes.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">2.7</span> &nbsp;Sobrecarga de métodos</div>
+  <p>Na <code>ContaBancaria</code>, crie duas versões de <code>Transferir</code>: uma que recebe <code>(ContaBancaria destino, decimal valor)</code> e outra que recebe também uma <code>string descricao</code>. A primeira deve chamar a segunda passando uma descrição padrão.</p>
+  <p class="muted"><b>Treina:</b> sobrecarga (mesmo nome, assinaturas diferentes), reaproveitamento de código.</p>
+  <div class="ok"><b>Está pronto quando:</b> as duas chamadas funcionam e a lógica de transferência existe em <b>um só lugar</b>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">2.8</span> &nbsp;Cadastro em memória</div>
+  <p>Monte um programa de console com menu que permita: <b>cadastrar</b> produto, <b>listar</b> todos, <b>buscar</b> por nome, <b>remover</b> por nome e mostrar o <b>valor total</b> do estoque. Guarde tudo em uma <code>List&lt;Produto&gt;</code>.</p>
+  <p class="muted"><b>Treina:</b> <code>List&lt;T&gt;</code>, <code>Add</code>, <code>Remove</code>, <code>foreach</code>, integração de tudo do nível.</p>
+  <div class="ok"><b>Está pronto quando:</b> dá para cadastrar 3 produtos, remover 1, listar e ver o total correto — tudo sem reiniciar o programa.</div>
+</div>
+
+<!-- =================== NÍVEL 3 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 3 — POO parte 2</h2>
+  <div class="sub">Herança, classes abstratas, interfaces, polimorfismo e separação em camadas. <b>Isto é o conteúdo da aula de 15/09 — você está se adiantando.</b></div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">3.1</span> &nbsp;Herança</div>
+  <p>Crie a classe <code>Animal</code> com <code>Nome</code>, <code>Idade</code> e o método <code>Apresentar()</code>. Crie <code>Cachorro</code> e <code>Gato</code> herdando de <code>Animal</code>, cada uma com uma propriedade própria (ex.: <code>Raca</code> e <code>PelagemLonga</code>).</p>
+  <pre>public class Cachorro : Animal { ... }</pre>
+  <p class="muted"><b>Treina:</b> <code>:</code> (herança), reaproveitamento de membros da classe base.</p>
+  <div class="ok"><b>Está pronto quando:</b> um <code>Cachorro</code> consegue usar <code>Apresentar()</code> sem que ele tenha sido escrito na classe <code>Cachorro</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">3.2</span> &nbsp;<code>virtual</code> e <code>override</code></div>
+  <p>Adicione à <code>Animal</code> o método <code>virtual string EmitirSom()</code> devolvendo "…". Sobrescreva em <code>Cachorro</code> ("Au au!") e em <code>Gato</code> ("Miau!"). Depois, sobrescreva <code>Apresentar()</code> em <code>Cachorro</code> chamando <code>base.Apresentar()</code> e acrescentando a raça.</p>
+  <p class="muted"><b>Treina:</b> <code>virtual</code>, <code>override</code>, <code>base</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> cada animal emite seu som e o <code>Apresentar()</code> do cachorro mostra a informação da classe base <b>mais</b> a raça.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">3.3</span> &nbsp;Classe abstrata</div>
+  <p>Crie a classe abstrata <code>FormaGeometrica</code> com <code>abstract double CalcularArea()</code> e <code>abstract double CalcularPerimetro()</code>. Implemente <code>Circulo</code>, <code>Retangulo</code> e <code>Triangulo</code>.</p>
+  <p class="muted"><b>Treina:</b> <code>abstract</code> — a classe define o contrato mas não a implementação.</p>
+  <div class="ok"><b>Está pronto quando:</b> a linha <code>new FormaGeometrica()</code> <b>não compila</b> (é abstrata), mas as três filhas funcionam.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">3.4</span> &nbsp;Polimorfismo</div>
+  <p>Crie uma <code>List&lt;FormaGeometrica&gt;</code> com objetos dos três tipos. Percorra a lista com um único <code>foreach</code> imprimindo a área de cada uma — <b>sem usar <code>if</code> para descobrir o tipo</b>.</p>
+  <p class="muted"><b>Treina:</b> polimorfismo — o mesmo código funciona para tipos diferentes.</p>
+  <div class="ok"><b>Está pronto quando:</b> você adiciona uma <code>Losango</code> nova e ela funciona no <code>foreach</code> sem alterar <b>nenhuma</b> linha do laço.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">3.5</span> &nbsp;Interface</div>
+  <p>Crie a interface <code>IPagamento</code> com o método <code>bool Processar(decimal valor)</code>. Implemente <code>PagamentoCartao</code> (recusa valores acima de 5000), <code>PagamentoPix</code> (aprova sempre) e <code>PagamentoBoleto</code> (recusa valores abaixo de 10). Crie um método que receba <code>IPagamento</code> e processe.</p>
+  <p class="muted"><b>Treina:</b> <code>interface</code>, programar contra abstração e não contra implementação.</p>
+  <div class="ok"><b>Está pronto quando:</b> o método que processa o pagamento <b>não sabe</b> qual é a forma concreta — só conhece a interface.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">3.6</span> &nbsp;Organização em pastas e namespaces</div>
+  <p>Reorganize os exercícios do nível 3 em pastas: <code>Models/</code> (as classes de domínio), <code>Services/</code> (as classes com regras) e <code>Program.cs</code> na raiz. Ajuste os <code>namespace</code> para bater com as pastas e adicione os <code>using</code> necessários.</p>
+  <p class="muted"><b>Treina:</b> <code>namespace</code>, organização de projeto — exatamente o que fazemos no PokéDraft.</p>
+  <div class="ok"><b>Está pronto quando:</b> o projeto compila e <b>nenhuma</b> classe está solta na raiz além do <code>Program.cs</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">3.7</span> &nbsp;Repositório genérico em memória</div>
+  <p>Crie a interface <code>IRepositorio&lt;T&gt;</code> com <code>Adicionar(T)</code>, <code>ListarTodos()</code>, <code>BuscarPorId(int)</code> e <code>Remover(int)</code>. Implemente <code>RepositorioMemoria&lt;T&gt;</code> usando uma <code>List&lt;T&gt;</code> interna.</p>
+  <p class="muted"><b>Treina:</b> genéricos (<code>&lt;T&gt;</code>), interface com implementação trocável. É o mesmo papel que o <code>DbContext</code> cumpre no projeto real.</p>
+  <div class="ok"><b>Está pronto quando:</b> o mesmo repositório funciona para <code>Produto</code> e para <code>Animal</code> sem duplicar código.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">3.8</span> &nbsp;Injeção de dependência manual</div>
+  <p>Crie a classe <code>ProdutoService</code> que recebe um <code>IRepositorio&lt;Produto&gt;</code> <b>pelo construtor</b> e expõe métodos com regras (ex.: <code>Cadastrar</code> que rejeita preço negativo). No <code>Main</code>, monte o serviço passando o repositório.</p>
+  <pre>var repo = new RepositorioMemoria&lt;Produto&gt;();
+var service = new ProdutoService(repo);</pre>
+  <p class="muted"><b>Treina:</b> injeção de dependência — o padrão que o ASP.NET Core faz automaticamente nos Controllers.</p>
+  <div class="ok"><b>Está pronto quando:</b> o <code>ProdutoService</code> não tem nenhum <code>new</code> de repositório dentro dele.</div>
+</div>
+
+<!-- =================== NÍVEL 4 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 4 — Coleções e LINQ</h2>
+  <div class="sub">Manipular listas de objetos. É o que você vai usar em <b>toda</b> consulta ao banco depois.</div>
+</div>
+
+<p class="muted">Para todos os exercícios deste nível, use uma lista com pelo menos 10 produtos de categorias variadas, criada direto no código.</p>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">4.1</span> &nbsp;Operações básicas de lista</div>
+  <p>Com a <code>List&lt;Produto&gt;</code>: adicione um item, remova outro, conte quantos restaram, verifique se um produto específico existe e limpe a lista ao final.</p>
+  <p class="muted"><b>Treina:</b> <code>Add</code>, <code>Remove</code>, <code>Count</code>, <code>Contains</code>, <code>Clear</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> você imprime a contagem depois de cada operação e os números batem.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">4.2</span> &nbsp;Filtrar e ordenar</div>
+  <p>Usando LINQ, monte três consultas: produtos com preço acima de 100; produtos ordenados por preço decrescente; produtos de uma categoria específica ordenados por nome.</p>
+  <pre>var caros = produtos.Where(p =&gt; p.Preco &gt; 100)
+                    .OrderByDescending(p =&gt; p.Preco)
+                    .ToList();</pre>
+  <p class="muted"><b>Treina:</b> <code>Where</code>, <code>OrderBy</code>, <code>OrderByDescending</code>, expressões lambda.</p>
+  <div class="ok"><b>Está pronto quando:</b> as três consultas cabem em uma linha cada e retornam o esperado.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">4.3</span> &nbsp;Projeção com <code>Select</code></div>
+  <p>Monte uma consulta que devolva apenas <b>o nome e o valor total</b> de cada produto (não o objeto inteiro), usando um tipo anônimo. Imprima o resultado.</p>
+  <pre>var resumo = produtos.Select(p =&gt; new { p.Nome, Total = p.Preco * p.Quantidade });</pre>
+  <p class="muted"><b>Treina:</b> <code>Select</code>, tipo anônimo. É a base do conceito de <b>DTO</b> que você usa no nível 7.</p>
+  <div class="ok"><b>Está pronto quando:</b> a saída mostra só as duas informações, sem os demais campos.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">4.4</span> &nbsp;Agregações</div>
+  <p>Calcule com LINQ: valor total do estoque (<code>Sum</code>), preço médio (<code>Average</code>), produto mais caro (<code>Max</code> ou <code>OrderByDescending().First()</code>), quantos estão sem estoque (<code>Count</code>) e se existe algum produto acima de R$ 1000 (<code>Any</code>).</p>
+  <p class="muted"><b>Treina:</b> <code>Sum</code>, <code>Average</code>, <code>Max</code>, <code>Min</code>, <code>Count</code>, <code>Any</code>, <code>All</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> nenhum desses cálculos usa <code>foreach</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">4.5</span> &nbsp;Busca segura</div>
+  <p>Busque um produto por nome usando <code>FirstOrDefault</code>. Trate o caso em que ele não existe, imprimindo "Produto não encontrado" em vez de quebrar o programa.</p>
+  <p class="muted"><b>Treina:</b> <code>FirstOrDefault</code> vs <code>First</code>, checagem de <code>null</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> buscar um nome inexistente mostra a mensagem e o programa continua rodando.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">4.6</span> &nbsp;Agrupamento</div>
+  <p>Agrupe os produtos por categoria e, para cada grupo, imprima: nome da categoria, quantidade de produtos e valor total daquela categoria.</p>
+  <pre>var porCategoria = produtos.GroupBy(p =&gt; p.Categoria);</pre>
+  <p class="muted"><b>Treina:</b> <code>GroupBy</code>, iterar sobre grupos.</p>
+  <div class="ok"><b>Está pronto quando:</b> a soma das quantidades de todos os grupos é igual ao total de produtos.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">4.7</span> &nbsp;Dicionário</div>
+  <p>Leia uma frase e conte quantas vezes cada palavra aparece, usando <code>Dictionary&lt;string, int&gt;</code>. Depois imprima ordenado da mais frequente para a menos.</p>
+  <p class="muted"><b>Treina:</b> <code>Dictionary</code>, <code>ContainsKey</code>, chave/valor.</p>
+  <div class="ok"><b>Está pronto quando:</b> a frase "o rato roeu o rato" mostra <code>o = 2</code> e <code>rato = 2</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">4.8</span> &nbsp;Relatório completo</div>
+  <p>Monte um único método <code>GerarRelatorio(List&lt;Produto&gt;)</code> que imprima um relatório formatado com: total de itens, valor do estoque, top 3 mais caros, produtos sem estoque e a distribuição por categoria.</p>
+  <p class="muted"><b>Treina:</b> encadear várias consultas, <code>Take</code>, formatação de saída.</p>
+  <div class="ok"><b>Está pronto quando:</b> o relatório sai organizado e legível, com todas as cinco seções.</div>
+</div>
+
+<!-- =================== NÍVEL 5 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 5 — Primeiro projeto web (MVC)</h2>
+  <div class="sub">A partir daqui, projeto web. Crie um novo: <code>dotnet new mvc -n LojaWeb</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">5.1</span> &nbsp;Criar e rodar</div>
+  <p>Crie o projeto <code>LojaWeb</code>, rode e abra no navegador. Depois altere o texto da página inicial e o título da aba.</p>
+  <pre>dotnet new mvc -n LojaWeb
+cd LojaWeb
+dotnet run</pre>
+  <p class="muted"><b>Treina:</b> estrutura do projeto MVC, <code>Views/Home/Index.cshtml</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> sua alteração aparece no navegador e você sabe dizer qual arquivo controla o título da aba.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">5.2</span> &nbsp;Novo Controller e View</div>
+  <p>Crie <code>ProdutoController</code> com o método <code>Index()</code> e a view correspondente em <code>Views/Produto/Index.cshtml</code>. Acesse <code>/Produto</code>.</p>
+  <p class="muted"><b>Treina:</b> a convenção <code>Views/&lt;Controller&gt;/&lt;Action&gt;.cshtml</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> a URL <code>/Produto</code> abre sua página sem erro 404.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">5.3</span> &nbsp;Passar dados para a View</div>
+  <p>No <code>ProdutoController</code>, crie uma lista de produtos em memória e envie para a view com <code>return View(lista)</code>. Na view, declare o <code>@model</code> e monte uma tabela HTML com <code>@foreach</code>.</p>
+  <pre>@model List&lt;LojaWeb.Models.Produto&gt;
+
+@foreach (var p in Model)
+{
+    &lt;tr&gt;&lt;td&gt;@p.Nome&lt;/td&gt;&lt;td&gt;@p.Preco&lt;/td&gt;&lt;/tr&gt;
+}</pre>
+  <p class="muted"><b>Treina:</b> Razor, <code>@model</code>, <code>@foreach</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> a tabela aparece preenchida com todos os produtos da lista.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">5.4</span> &nbsp;Rota com parâmetro</div>
+  <p>Crie a action <code>Detalhes(int id)</code> que busca o produto na lista e mostra os dados dele em uma view própria. Se o id não existir, devolva <code>NotFound()</code>. Teste com <code>/Produto/Detalhes/2</code>.</p>
+  <p class="muted"><b>Treina:</b> parâmetro de rota, <code>NotFound()</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> <code>/Produto/Detalhes/999</code> devolve 404 e <code>/Produto/Detalhes/1</code> mostra o produto.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">5.5</span> &nbsp;Navegação entre páginas</div>
+  <p>Na tabela do 5.3, adicione em cada linha um link "Detalhes" apontando para a action do 5.4. Adicione também "Produtos" no menu do <code>_Layout.cshtml</code>.</p>
+  <pre>&lt;a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@p.Id"&gt;Detalhes&lt;/a&gt;</pre>
+  <p class="muted"><b>Treina:</b> tag helpers de link, <code>_Layout.cshtml</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> dá para navegar da lista para o detalhe e voltar usando só o mouse.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">5.6</span> &nbsp;CSS próprio</div>
+  <p>Adicione estilos em <code>wwwroot/css/site.css</code> para deixar a tabela de produtos apresentável (linhas zebradas, cabeçalho destacado, espaçamento). Depois, <b>de propósito</b>, mova o arquivo CSS para fora do <code>wwwroot</code> e veja o que acontece.</p>
+  <p class="muted"><b>Treina:</b> por que o <code>wwwroot</code> existe.</p>
+  <div class="ok"><b>Está pronto quando:</b> você consegue explicar por que o CSS parou de funcionar fora do <code>wwwroot</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">5.7</span> &nbsp;Formulário</div>
+  <p>Crie a action <code>Criar()</code> (GET, mostra o formulário) e <code>Criar(Produto produto)</code> (POST, recebe os dados e adiciona na lista). Depois de salvar, redirecione para a listagem com <code>RedirectToAction("Index")</code>.</p>
+  <p class="muted"><b>Treina:</b> <code>[HttpGet]</code>/<code>[HttpPost]</code>, model binding, <code>RedirectToAction</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> preencher o formulário e enviar faz o produto aparecer na tabela.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">5.8</span> &nbsp;Validação</div>
+  <p>Adicione anotações na classe <code>Produto</code> (<code>[Required]</code>, <code>[Range(0.01, 99999)]</code>, <code>[StringLength(80)]</code>). No POST, verifique <code>ModelState.IsValid</code> e, se inválido, devolva o formulário com as mensagens de erro.</p>
+  <p class="muted"><b>Treina:</b> Data Annotations, <code>ModelState</code>, <code>asp-validation-for</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> enviar o formulário vazio mostra as mensagens de erro e <b>não</b> adiciona nada na lista.</div>
+</div>
+
+<!-- =================== NÍVEL 6 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 6 — Banco de dados com EF Core + SQLite</h2>
+  <div class="sub">Trocar a lista em memória por um banco de verdade. Continue no projeto <code>LojaWeb</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">6.1</span> &nbsp;Instalar e configurar</div>
+  <p>Instale os pacotes, crie <code>Data/LojaDbContext.cs</code> com um <code>DbSet&lt;Produto&gt;</code>, adicione a connection string no <code>appsettings.json</code> e registre o contexto no <code>Program.cs</code>.</p>
+  <pre>dotnet add package Microsoft.EntityFrameworkCore.Sqlite -v 8.0.10
+dotnet add package Microsoft.EntityFrameworkCore.Design -v 8.0.10
+dotnet tool install --global dotnet-ef --version 8.*</pre>
+  <p class="muted"><b>Treina:</b> pacotes NuGet, <code>DbContext</code>, <code>AddDbContext</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> <code>dotnet build</code> passa sem erro.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">6.2</span> &nbsp;Primeira migration</div>
+  <p>Gere a migration e aplique. Depois, abra a pasta <code>Migrations/</code> e leia o método <code>Up()</code> — identifique o comando que cria a tabela e quais colunas ele declara.</p>
+  <pre>dotnet ef migrations add CriaTabelaProduto
+dotnet ef database update</pre>
+  <p class="muted"><b>Treina:</b> migrations, entender o código gerado.</p>
+  <div class="ok"><b>Está pronto quando:</b> o arquivo <code>.db</code> aparece na pasta e você consegue apontar no <code>Up()</code> qual linha cria cada coluna.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">6.3</span> &nbsp;CRUD no banco</div>
+  <p>Refaça o <code>ProdutoController</code> para usar o banco em vez da lista em memória: listar, detalhar, criar, editar e excluir. Receba o <code>LojaDbContext</code> pelo construtor.</p>
+  <pre>private readonly LojaDbContext _context;
+public ProdutoController(LojaDbContext context) =&gt; _context = context;</pre>
+  <p class="muted"><b>Treina:</b> injeção de dependência automática, <code>Add</code>, <code>Update</code>, <code>Remove</code>, <code>SaveChanges</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> você cadastra um produto, <b>para o servidor, roda de novo</b> e o produto continua lá.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">6.4</span> &nbsp;Relacionamento 1:N</div>
+  <p>Crie a entidade <code>Categoria</code> (Id, Nome) e ligue: uma categoria tem vários produtos; um produto pertence a uma categoria. Gere a migration. Na listagem, mostre o nome da categoria de cada produto usando <code>Include</code>.</p>
+  <pre>var produtos = _context.Produtos.Include(p =&gt; p.Categoria).ToList();</pre>
+  <p class="muted"><b>Treina:</b> chave estrangeira, propriedade de navegação, <code>Include</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> a coluna "Categoria" aparece preenchida — e você testa remover o <code>Include</code> para ver o que acontece.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">6.5</span> &nbsp;Seed</div>
+  <p>Use <code>HasData</code> no <code>OnModelCreating</code> para cadastrar automaticamente 4 categorias. Gere uma nova migration e aplique.</p>
+  <p class="muted"><b>Treina:</b> <code>HasData</code>, migration de dados.</p>
+  <div class="ok"><b>Está pronto quando:</b> você apaga o <code>.db</code>, roda <code>database update</code> e as 4 categorias já estão lá.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">6.6</span> &nbsp;Migration de alteração</div>
+  <p>Adicione a propriedade <code>DateTime DataCadastro</code> na <code>Produto</code>. Gere e aplique uma nova migration chamada <code>AdicionaDataCadastro</code>. Depois rode <code>dotnet ef migrations list</code> e veja as três migrations.</p>
+  <p class="muted"><b>Treina:</b> evolução do esquema sem perder dados.</p>
+  <div class="ok"><b>Está pronto quando:</b> os produtos que já existiam continuam no banco depois da migration.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">6.7</span> &nbsp;Relacionamento N:N</div>
+  <p>Crie a entidade <code>Tag</code> (Id, Nome) e relacione com <code>Produto</code> em muitos-para-muitos: um produto pode ter várias tags e uma tag pode estar em vários produtos. Gere a migration e observe a tabela de junção criada.</p>
+  <pre>public ICollection&lt;Tag&gt; Tags { get; set; } = new List&lt;Tag&gt;();</pre>
+  <p class="muted"><b>Treina:</b> N:N, tabela de junção automática do EF Core 8.</p>
+  <div class="ok"><b>Está pronto quando:</b> você identifica no banco a terceira tabela (<code>ProdutoTag</code>) que o EF criou sozinho.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">6.8</span> &nbsp;Consultas no banco</div>
+  <p>Crie uma action <code>Relatorio()</code> que mostre: total de produtos, valor total do estoque, produtos agrupados por categoria com a contagem, e os 5 mais caros. Tudo com LINQ direto no <code>DbContext</code>.</p>
+  <p class="muted"><b>Treina:</b> LINQ traduzido para SQL, <code>GroupBy</code> no banco, <code>Take</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> a página do relatório mostra as quatro informações corretas.</div>
+</div>
+
+<!-- =================== NÍVEL 7 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 7 — API REST</h2>
+  <div class="sub">O mesmo CRUD, mas devolvendo JSON em vez de HTML. Crie <code>Controllers/ProdutosApiController.cs</code>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">7.1</span> &nbsp;Primeiro endpoint</div>
+  <p>Crie um controller de API que herde de <code>ControllerBase</code>, com <code>[ApiController]</code> e <code>[Route("api/produtos")]</code>. Implemente o <code>GET</code> que devolve todos os produtos. Acesse <code>/api/produtos</code> no navegador.</p>
+  <p class="muted"><b>Treina:</b> <code>[ApiController]</code>, <code>[Route]</code>, <code>[HttpGet]</code>, <code>Ok()</code>.</p>
+  <div class="ok"><b>Está pronto quando:</b> o navegador mostra um JSON com a lista de produtos.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">7.2</span> &nbsp;GET por id</div>
+  <p>Implemente <code>GET /api/produtos/{id}</code>. Se o produto não existir, devolva <code>NotFound()</code>.</p>
+  <p class="muted"><b>Treina:</b> parâmetro de rota na API, status 404.</p>
+  <div class="ok"><b>Está pronto quando:</b> <code>/api/produtos/999</code> devolve status 404 (veja na aba Network do F12).</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">7.3</span> &nbsp;POST</div>
+  <p>Implemente <code>POST /api/produtos</code> que recebe um produto em JSON, salva e devolve <code>CreatedAtAction</code> com status 201. Teste usando um arquivo <code>.http</code> no VS Code (extensão REST Client) ou o Swagger.</p>
+  <pre>POST http://localhost:5000/api/produtos
+Content-Type: application/json
+
+{ "nome": "Mouse", "preco": 89.90, "quantidade": 5 }</pre>
+  <p class="muted"><b>Treina:</b> <code>[HttpPost]</code>, corpo da requisição, status 201.</p>
+  <div class="ok"><b>Está pronto quando:</b> a resposta é 201 e o produto aparece no <code>GET</code> seguinte.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">7.4</span> &nbsp;PUT e DELETE</div>
+  <p>Implemente a atualização (<code>PUT /api/produtos/{id}</code>, devolvendo o objeto atualizado) e a exclusão (<code>DELETE /api/produtos/{id}</code>, devolvendo <code>NoContent()</code>). Ambos devem devolver 404 se o id não existir.</p>
+  <p class="muted"><b>Treina:</b> os quatro verbos do CRUD, status 204.</p>
+  <div class="ok"><b>Está pronto quando:</b> os quatro verbos funcionam e cada um devolve o status correto.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">7.5</span> &nbsp;Validação na API</div>
+  <p>Rejeite requisições inválidas devolvendo <code>BadRequest</code> com uma mensagem clara: nome vazio, preço negativo, quantidade negativa.</p>
+  <p class="muted"><b>Treina:</b> status 400, validação no servidor.</p>
+  <div class="ok"><b>Está pronto quando:</b> enviar <code>{"nome": "", "preco": -5}</code> devolve 400 com a explicação do problema.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">7.6</span> &nbsp;DTO</div>
+  <p>Crie <code>ProdutoDto</code> (só Id, Nome, Preco e NomeCategoria) e faça a API devolver o DTO em vez da entidade. Crie também <code>ProdutoCriarDto</code> para a entrada (sem Id).</p>
+  <p class="muted"><b>Treina:</b> DTO — separar o que o banco guarda do que a API expõe. Evita vazar dados e quebrar o cliente quando a entidade muda.</p>
+  <div class="ok"><b>Está pronto quando:</b> o JSON de resposta <b>não</b> tem propriedades de navegação nem campos internos.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">7.7</span> &nbsp;Async</div>
+  <p>Converta todos os endpoints para assíncronos: <code>async Task&lt;IActionResult&gt;</code>, usando <code>ToListAsync()</code>, <code>FindAsync()</code> e <code>SaveChangesAsync()</code>.</p>
+  <p class="muted"><b>Treina:</b> <code>async</code>/<code>await</code>, versões assíncronas do EF Core.</p>
+  <div class="ok"><b>Está pronto quando:</b> nenhum endpoint tem chamada síncrona ao banco e tudo continua funcionando igual.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">7.8</span> &nbsp;API de categorias</div>
+  <p>Repita todo o CRUD para <code>Categoria</code>, em <code>/api/categorias</code>. Adicione um endpoint extra: <code>GET /api/categorias/{id}/produtos</code>, que lista os produtos daquela categoria.</p>
+  <p class="muted"><b>Treina:</b> repetição do padrão (é assim que se fixa), rota aninhada.</p>
+  <div class="ok"><b>Está pronto quando:</b> você consegue montar o CRUD inteiro sem consultar o do produto.</div>
+</div>
+
+<!-- =================== NÍVEL 8 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 8 — Frontend consumindo a API</h2>
+  <div class="sub">JavaScript com <code>fetch</code> na pasta <code>wwwroot/js/</code>. Crie uma página que funcione <b>sem recarregar</b>.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●○○</div>
+  <div class="h"><span class="num">8.1</span> &nbsp;Listar com <code>fetch</code></div>
+  <p>Crie a view <code>Views/Produto/App.cshtml</code> com uma <code>&lt;table&gt;</code> vazia e o arquivo <code>wwwroot/js/produtos.js</code>. No JS, busque <code>/api/produtos</code> e preencha a tabela.</p>
+  <pre>async function carregar() {
+    const resp = await fetch("/api/produtos");
+    const produtos = await resp.json();
+    // ... monta as linhas
+}
+carregar();</pre>
+  <p class="muted"><b>Treina:</b> <code>fetch</code>, <code>async/await</code>, manipulação do DOM.</p>
+  <div class="ok"><b>Está pronto quando:</b> a tabela aparece preenchida ao abrir a página, sem nenhum dado no HTML.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">8.2</span> &nbsp;Criar com POST</div>
+  <p>Adicione campos de entrada e um botão "Adicionar". Ao clicar, envie um <code>POST</code> para a API e, se der certo, recarregue a lista e limpe os campos.</p>
+  <pre>await fetch("/api/produtos", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome, preco, quantidade })
+});</pre>
+  <p class="muted"><b>Treina:</b> <code>fetch</code> com método, headers e body.</p>
+  <div class="ok"><b>Está pronto quando:</b> o produto aparece na tabela sem a página recarregar. <b>Teste esquecer o header <code>Content-Type</code></b> e veja o erro que dá.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">8.3</span> &nbsp;Excluir</div>
+  <p>Adicione um botão "Excluir" em cada linha. Peça confirmação com <code>confirm()</code> antes de enviar o <code>DELETE</code>.</p>
+  <p class="muted"><b>Treina:</b> <code>DELETE</code> via fetch, passar o id do item clicado.</p>
+  <div class="ok"><b>Está pronto quando:</b> excluir remove da tela e o item não volta ao recarregar a página.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">8.4</span> &nbsp;Editar</div>
+  <p>Adicione "Editar" em cada linha: ao clicar, preencha o formulário com os dados atuais e mude o botão para "Salvar alteração", que envia um <code>PUT</code>. Depois de salvar, volte ao modo de criação.</p>
+  <p class="muted"><b>Treina:</b> <code>PUT</code>, controlar estado da tela (criando vs editando).</p>
+  <div class="ok"><b>Está pronto quando:</b> dá para criar, editar e criar de novo sem recarregar nem se perder no estado.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">8.5</span> &nbsp;Tratamento de erro</div>
+  <p>Em toda chamada, verifique <code>resp.ok</code> antes de usar os dados. Se der erro, mostre a mensagem vinda da API em uma área de aviso na tela (não use <code>alert</code>). Adicione também um texto "Carregando…" enquanto a requisição está em andamento.</p>
+  <p class="muted"><b>Treina:</b> <code>response.ok</code>, feedback ao usuário — o que separa um sistema amador de um decente.</p>
+  <div class="ok"><b>Está pronto quando:</b> tentar cadastrar um produto inválido mostra o erro da API na tela, sem quebrar nada.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●○</div>
+  <div class="h"><span class="num">8.6</span> &nbsp;Busca e filtro</div>
+  <p>Adicione um campo de busca que filtre a tabela conforme o usuário digita. Faça duas versões: filtrando no navegador (sobre os dados já carregados) e filtrando no servidor (<code>/api/produtos?busca=xxx</code>).</p>
+  <p class="muted"><b>Treina:</b> evento <code>input</code>, query string, filtro no <code>Where</code> do backend.</p>
+  <div class="ok"><b>Está pronto quando:</b> as duas versões funcionam e você consegue explicar quando usar cada uma.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">8.7</span> &nbsp;Deixar apresentável</div>
+  <p>Estilize a página: tabela limpa, formulário organizado, botões com cores distintas (adicionar/editar/excluir), mensagens de erro em vermelho e sucesso em verde. Garanta que funciona em tela de celular.</p>
+  <p class="muted"><b>Treina:</b> CSS, responsividade — a entrega de 23/10 do projeto real.</p>
+  <div class="ok"><b>Está pronto quando:</b> a página fica utilizável ao reduzir a janela para largura de celular (F12 → modo dispositivo).</div>
+</div>
+
+<!-- =================== NÍVEL 9 =================== -->
+<div class="nivel-head page-break">
+  <h2>Nível 9 — Um pouco além</h2>
+  <div class="sub">Conteúdo que não vai cair na prova, mas que aparece no projeto e em qualquer sistema real.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">9.1</span> &nbsp;Camada de serviço</div>
+  <p>Crie <code>Services/IProdutoService.cs</code> e <code>Services/ProdutoService.cs</code>. Mova para lá <b>toda</b> a lógica que hoje está no controller (validações, cálculos, acesso ao contexto). Registre no <code>Program.cs</code> e injete a interface no controller.</p>
+  <pre>builder.Services.AddScoped&lt;IProdutoService, ProdutoService&gt;();</pre>
+  <p class="muted"><b>Treina:</b> separação de responsabilidades, DI do ASP.NET Core. Conecta com o exercício 3.8.</p>
+  <div class="ok"><b>Está pronto quando:</b> o controller não menciona o <code>DbContext</code> em nenhuma linha.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">9.2</span> &nbsp;Consumir uma API externa</div>
+  <p>Use <code>HttpClient</code> para consumir a <b>ViaCEP</b> (<code>https://viacep.com.br/ws/01001000/json/</code>). Crie um endpoint <code>GET /api/cep/{cep}</code> que busca lá e devolve o endereço. Trate CEP inválido.</p>
+  <pre>builder.Services.AddHttpClient();   <span class="cm">// no Program.cs</span></pre>
+  <p class="muted"><b>Treina:</b> <code>HttpClient</code>, desserializar JSON externo, <code>async</code>. É exatamente o que o importador da PokéAPI faz.</p>
+  <div class="ok"><b>Está pronto quando:</b> <code>/api/cep/01001000</code> devolve "Praça da Sé" e um CEP inexistente devolve erro tratado.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">9.3</span> &nbsp;Importador com anti-duplicação</div>
+  <p>Crie um endpoint <code>POST /api/importar</code> que busca dados de uma API externa e <b>salva no seu banco</b>. Regra: rodar duas vezes não pode duplicar registros — verifique antes de inserir e devolva quantos foram criados e quantos já existiam.</p>
+  <p class="muted"><b>Treina:</b> idempotência, <code>Any()</code> antes de inserir, índice único.</p>
+  <div class="ok"><b>Está pronto quando:</b> a segunda execução devolve "0 criados, N já existentes" e o total no banco não muda.</div>
+</div>
+
+<div class="ex">
+  <div class="dif">●●●</div>
+  <div class="h"><span class="num">9.4</span> &nbsp;Paginação e ordenação</div>
+  <p>Altere <code>GET /api/produtos</code> para aceitar <code>?pagina=1&amp;tamanho=10&amp;ordenarPor=preco</code>. Devolva também o total de registros e o total de páginas. No frontend, adicione botões "anterior" e "próxima".</p>
+  <pre>.Skip((pagina - 1) * tamanho).Take(tamanho)</pre>
+  <p class="muted"><b>Treina:</b> <code>Skip</code>/<code>Take</code>, query string com vários parâmetros, resposta com metadados.</p>
+  <div class="ok"><b>Está pronto quando:</b> com 25 produtos e tamanho 10, a página 3 devolve 5 itens e informa "3 de 3".</div>
+</div>
+
+<div class="ex desafio">
+  <div class="dif">Desafio</div>
+  <div class="h"><span class="num">9.5</span> &nbsp;Teste automatizado</div>
+  <p>Crie um projeto de testes (<code>dotnet new xunit -n LojaWeb.Tests</code>) e escreva testes para o <code>ProdutoService</code>: cadastrar com preço negativo deve falhar; cadastrar válido deve funcionar; buscar id inexistente deve devolver nulo.</p>
+  <p class="muted"><b>Treina:</b> xUnit, <code>[Fact]</code>, <code>Assert</code>, banco em memória para teste.</p>
+  <div class="ok"><b>Está pronto quando:</b> <code>dotnet test</code> roda e mostra os três testes passando.</div>
+</div>
+
+<!-- =================== PROJETO FINAL =================== -->
+<div class="nivel-head page-break">
+  <h2>Projeto integrador — Sistema de Biblioteca</h2>
+  <div class="sub">Junta tudo. Faça do zero, em um projeto novo, sem copiar dos exercícios anteriores.</div>
+</div>
+
+<p>Construa um sistema web para uma biblioteca gerenciar seu acervo e os empréstimos.</p>
+
+<h3>Modelo de dados exigido</h3>
+<table>
+  <tr><th style="width:22%">Entidade</th><th>Campos e relacionamentos</th></tr>
+  <tr><td class="mono">Autor</td><td>Id, Nome, Nacionalidade. <b>1:N</b> com Livro.</td></tr>
+  <tr><td class="mono">Livro</td><td>Id, Titulo, Ano, Isbn (único), QuantidadeExemplares, AutorId. <b>N:N</b> com Categoria.</td></tr>
+  <tr><td class="mono">Categoria</td><td>Id, Nome (único). <b>N:N</b> com Livro.</td></tr>
+  <tr><td class="mono">Membro</td><td>Id, Nome, Email (único), DataCadastro.</td></tr>
+  <tr><td class="mono">Emprestimo</td><td>Id, LivroId, MembroId, DataEmprestimo, DataPrevistaDevolucao, DataDevolucao (nulo enquanto não devolveu), Status (enum).</td></tr>
+</table>
+
+<h3>Requisitos funcionais</h3>
+<ol>
+  <li>CRUD completo (API + tela) para <b>Autor</b>, <b>Livro</b>, <b>Categoria</b> e <b>Membro</b>.</li>
+  <li><b>Registrar empréstimo:</b> só pode se houver exemplar disponível. A data prevista de devolução é 14 dias após o empréstimo.</li>
+  <li><b>Registrar devolução:</b> preenche a data de devolução e libera o exemplar.</li>
+  <li><b>Regra de bloqueio:</b> um membro com empréstimo atrasado não pode pegar outro livro.</li>
+  <li><b>Limite:</b> no máximo 3 empréstimos simultâneos por membro.</li>
+  <li><b>Tela de empréstimos:</b> lista com filtro por situação (em dia / atrasado / devolvido), destacando os atrasados em vermelho.</li>
+  <li><b>Busca de livros</b> por título ou autor, com paginação.</li>
+  <li><b>Relatório:</b> livros mais emprestados, membros com mais empréstimos e total de livros por categoria.</li>
+</ol>
+
+<h3>Requisitos técnicos</h3>
+<ul>
+  <li>ASP.NET Core MVC (.NET 8) + EF Core + SQLite, com migrations versionadas.</li>
+  <li>Camada de serviço com interface: <b>nenhuma regra de negócio dentro do controller</b>.</li>
+  <li>API REST com DTOs, todos os endpoints <code>async</code> e status HTTP corretos.</li>
+  <li>Frontend consumindo a API com <code>fetch</code>, com tratamento de erro e estado de carregamento.</li>
+  <li>Seed inicial com pelo menos 5 categorias, 5 autores e 10 livros.</li>
+  <li><code>README.md</code> explicando como rodar.</li>
+  <li>Repositório no GitHub com commits ao longo do desenvolvimento (não um commit único no final).</li>
+</ul>
+
+<div class="callout rule">
+  <b>Como avaliar se ficou bom:</b> peça para um colega clonar o repositório e rodar seguindo só o
+  README. Se ele conseguir sem te perguntar nada, o projeto está pronto.
+</div>
+
+<h3>Extensões opcionais</h3>
+<ul>
+  <li>Reserva de livro quando não há exemplar disponível, com fila de espera.</li>
+  <li>Cálculo de multa por atraso (valor por dia).</li>
+  <li>Histórico de empréstimos por membro, com exportação em CSV.</li>
+  <li>Autenticação simples separando bibliotecário de membro.</li>
+</ul>
+
+<!-- =================== ACOMPANHAMENTO =================== -->
+<h2 class="page-break">Folha de acompanhamento</h2>
+<p>Imprima ou copie para marcar o progresso. Sugestão: preencha a data de conclusão de cada nível.</p>
+<table>
+  <tr><th style="width:10%">Nível</th><th style="width:44%">Conteúdo</th><th style="width:12%">Exercícios</th><th style="width:16%">Concluído em</th><th>Dificuldade sentida</th></tr>
+  <tr><td><b>0</b></td><td>Preparação do ambiente e Git</td><td>0.1 – 0.3</td><td></td><td></td></tr>
+  <tr><td><b>1</b></td><td>Fundamentos de C#</td><td>1.1 – 1.9</td><td></td><td></td></tr>
+  <tr><td><b>2</b></td><td>POO parte 1</td><td>2.1 – 2.8</td><td></td><td></td></tr>
+  <tr><td><b>3</b></td><td>POO parte 2 (herança, interfaces)</td><td>3.1 – 3.8</td><td></td><td></td></tr>
+  <tr><td><b>4</b></td><td>Coleções e LINQ</td><td>4.1 – 4.8</td><td></td><td></td></tr>
+  <tr><td><b>5</b></td><td>MVC: Controllers e Views</td><td>5.1 – 5.8</td><td></td><td></td></tr>
+  <tr><td><b>6</b></td><td>EF Core + SQLite</td><td>6.1 – 6.8</td><td></td><td></td></tr>
+  <tr><td><b>7</b></td><td>API REST</td><td>7.1 – 7.8</td><td></td><td></td></tr>
+  <tr><td><b>8</b></td><td>Frontend com fetch</td><td>8.1 – 8.7</td><td></td><td></td></tr>
+  <tr><td><b>9</b></td><td>Serviços, API externa, paginação</td><td>9.1 – 9.5</td><td></td><td></td></tr>
+  <tr><td><b>—</b></td><td>Projeto integrador: Biblioteca</td><td>—</td><td></td><td></td></tr>
+</table>
+
+<h3>Onde consultar quando travar</h3>
+<table>
+  <tr><th style="width:32%">Assunto</th><th>Fonte</th></tr>
+  <tr><td>Sintaxe de C#</td><td>Documentação oficial da Microsoft (learn.microsoft.com/dotnet/csharp) — tem exemplos executáveis.</td></tr>
+  <tr><td>EF Core e migrations</td><td>learn.microsoft.com/ef/core</td></tr>
+  <tr><td>Estrutura MVC e API</td><td>O material da disciplina: "Guia do Projeto — MVC em C#".</td></tr>
+  <tr><td>Erro específico</td><td>Copie a <b>mensagem completa</b> do erro e pesquise. A maior parte já aconteceu com outra pessoa.</td></tr>
+  <tr><td>Como fizemos no projeto</td><td>O Manual Técnico do PokéDraft — tem exemplo real de entidade, DbContext, controller de API e JavaScript.</td></tr>
+</table>
+
+<div class="callout">
+  <b>Conselho final:</b> não pule os níveis 3 e 4. Herança, interfaces e LINQ são o que separa
+  "consigo fazer funcionar" de "consigo fazer direito" — e são exatamente os pontos que aparecem
+  na hora de organizar o projeto em camadas.
+</div>
+
+<p class="foot" style="margin-top:14pt">
+  Lista de Exercícios · C# / ASP.NET Core · Desenvolvimento de Software Visual · 2026<br>
+  72 exercícios · 10 níveis · 1 projeto integrador
+</p>
+
+</body>
+</html>

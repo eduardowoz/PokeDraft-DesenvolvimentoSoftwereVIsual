@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>PokéDraft — Manual Técnico do Projeto</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 16mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 10pt; line-height: 1.5; color: #1a1a2e; margin: 0;
+  }
+  h1,h2,h3,h4 { font-family: Georgia, "Times New Roman", serif; color: #0f2b46; line-height: 1.2; }
+  h1 { font-size: 27pt; margin: 0 0 4pt; }
+  h2 {
+    font-size: 16pt; margin: 20pt 0 8pt; padding: 3pt 0 5pt;
+    border-bottom: 2.5px solid #12a594;
+  }
+  h3 { font-size: 12.5pt; margin: 15pt 0 5pt; color: #14324f; }
+  h4 {
+    font-size: 10.5pt; margin: 11pt 0 3pt; color: #0f2b46;
+    font-family: -apple-system, "Segoe UI", sans-serif; font-weight: 700;
+  }
+  p { margin: 5pt 0; }
+  code, .mono {
+    font-family: "Consolas","SFMono-Regular",Menlo,monospace;
+    font-size: 8.8pt; background: #eef2f5; padding: 1px 4px; border-radius: 3px; color: #0f2b46;
+  }
+  th .mono, th code { background: rgba(255,255,255,.18); color: #fff; }
+  pre {
+    font-family: "Consolas",monospace; font-size: 8.5pt; line-height: 1.45;
+    background: #0f2b46; color: #e8eef3; padding: 9pt 11pt; border-radius: 5px;
+    white-space: pre-wrap; word-break: break-word; margin: 6pt 0;
+  }
+  pre .cm { color: #7fb0c9; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 8.8pt; }
+  th, td { text-align: left; vertical-align: top; padding: 4pt 6pt; border: 1px solid #cdd8e0; }
+  th { background: #0f2b46; color: #fff; font-family: -apple-system,"Segoe UI",sans-serif; font-size: 8.5pt; }
+  tr:nth-child(even) td { background: #f4f7f9; }
+  td.mono, th.mono { font-family: "Consolas",monospace; background: none; }
+  tr:nth-child(even) td.mono { background: #f4f7f9; }
+  .lead { font-size: 11.5pt; color: #3a4a5a; }
+  .tag {
+    display: inline-block; background: #12a594; color: #fff; font-size: 7.5pt; font-weight: 700;
+    letter-spacing: .6px; padding: 2px 7px; border-radius: 10px; text-transform: uppercase;
+  }
+  .callout { background: #e7f6f4; border-left: 4px solid #12a594; padding: 7pt 11pt; border-radius: 0 5px 5px 0; margin: 8pt 0; }
+  .callout.warn { background: #fdf0e3; border-left-color: #e08a2b; }
+  .callout.rule { background: #eef2f7; border-left-color: #0f2b46; }
+  .muted { color: #6a7784; }
+  .ascii {
+    font-family: "Consolas",monospace; font-size: 8pt; line-height: 1.35;
+    background: #f4f7f9; border: 1px solid #cdd8e0; border-radius: 5px;
+    padding: 9pt 11pt; white-space: pre; overflow: hidden;
+  }
+  .ascii b { color: #0f2b46; }
+  .ascii .c { color: #6a7784; }
+  .page-break { page-break-before: always; }
+  ul, ol { margin: 5pt 0; padding-left: 17pt; }
+  li { margin: 2.5pt 0; }
+  .toc { font-size: 9.5pt; }
+  .toc div { padding: 1.5pt 0; border-bottom: 1px dotted #cdd8e0; }
+  .toc .n { display: inline-block; width: 22pt; color: #12a594; font-weight: 700; }
+  .toc .sub { padding-left: 24pt; color: #4a5a6a; font-size: 9pt; border-bottom: 0; }
+  .card {
+    border: 1px solid #cdd8e0; border-left: 4px solid #12a594; border-radius: 0 5px 5px 0;
+    padding: 7pt 11pt; margin: 9pt 0; background: #fbfcfd;
+  }
+  .card h4 { margin-top: 0; }
+  .fname {
+    font-family: "Consolas",monospace; font-size: 9.5pt; font-weight: 700;
+    color: #0f2b46; background: #e7f6f4; padding: 2px 6px; border-radius: 3px;
+  }
+  .foot { font-size: 8.5pt; color: #6a7784; }
+  .kv { font-size: 9pt; }
+  .kv b { color: #0f2b46; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, .ascii, .callout, .card { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ============ CAPA ============ -->
+<div>
+  <span class="tag">Desenvolvimento de Software Visual · 2026</span>
+  <h1>PokéDraft</h1>
+  <p style="font-family:Georgia,serif;font-size:14pt;color:#12a594;font-weight:700;margin:2pt 0 8pt">
+    Manual Técnico do Projeto
+  </p>
+  <p class="lead">
+    Documento de referência do sistema: regras do domínio, arquitetura, função de
+    cada arquivo, estrutura completa do banco de dados, conceitos de C# usados no
+    código e o passo a passo para implementar novas funcionalidades.
+  </p>
+  <p class="foot">
+    Versão do documento: 1.0 &nbsp;·&nbsp; Base de código: 1ª entrega (aula 28/08) —
+    solução criada, banco modelado, primeira migration aplicada.<br>
+    Repositório: github.com/eduardowoz/PokeDraft-DesenvolvimentoSoftwereVIsual
+  </p>
+</div>
+
+<h2>Índice</h2>
+<div class="toc">
+  <div><span class="n">1.</span> <b>O sistema</b> — o que é, glossário, regras do jogo, fluxo de uma partida</div>
+  <div><span class="n">2.</span> <b>Arquitetura</b> — stack, MVC, caminho de uma requisição, responsabilidades</div>
+  <div><span class="n">3.</span> <b>Ambiente</b> — pré-requisitos, setup, comandos, problemas comuns</div>
+  <div><span class="n">4.</span> <b>Mapa completo de arquivos</b> — o que cada arquivo faz, um por um</div>
+  <div class="sub">4.1 Raiz · 4.2 Configuração · 4.3 Controllers · 4.4 Models · 4.5 Data · 4.6 Migrations · 4.7 Views · 4.8 wwwroot</div>
+  <div><span class="n">5.</span> <b>O banco de dados</b> — diagrama, ficha de cada tabela, índices, regras de exclusão</div>
+  <div><span class="n">6.</span> <b>Conceitos de C# e EF Core</b> que aparecem no nosso código</div>
+  <div><span class="n">7.</span> <b>Receita completa</b> — como criar uma funcionalidade do zero (exemplo real)</div>
+  <div><span class="n">8.</span> <b>Convenções do time</b> — nomes, pastas, commits</div>
+  <div><span class="n">9.</span> <b>Git e Trello</b> — fluxo de trabalho</div>
+  <div><span class="n">10.</span> <b>Cronograma</b> e divisão sugerida de tarefas</div>
+</div>
+
+<!-- ============ 1. O SISTEMA ============ -->
+<h2 class="page-break">1. O sistema</h2>
+
+<h3>1.1 O que é</h3>
+<p>
+  <b>PokéDraft</b> é um sistema web de entretenimento que simula uma batalha Pokémon
+  entre <b>duas pessoas</b>. Diferente de um jogo tradicional, o jogador não escolhe
+  livremente qualquer Pokémon: ele precisa <b>montar um time dentro de um orçamento</b>,
+  a partir de um conjunto de Pokémon sorteado aleatoriamente e <b>compartilhado com o
+  adversário</b>. Isso cria disputa: se você não pegar um Pokémon forte, o oponente pega.
+</p>
+<p><b>Público-alvo:</b> qualquer pessoa que goste de Pokémon, batalhas e um componente de sorte/estratégia.</p>
+
+<h3>1.2 Glossário do domínio</h3>
+<p>Termos que aparecem o tempo todo no código. Todo mundo do grupo precisa usar as mesmas palavras.</p>
+<table>
+  <tr><th style="width:22%">Termo</th><th>Significado no nosso sistema</th></tr>
+  <tr><td class="mono">Draft</td><td>A fase de montagem do time, antes da batalha. Envolve banir, comprar e vender.</td></tr>
+  <tr><td class="mono">Sample (pool)</td><td>Um "pacote" de Pokémon sorteados aleatoriamente. São gerados vários samples por partida, e os <b>dois jogadores enxergam os mesmos</b>. No código: tabela <code>PokemonNoPool</code>, campo <code>NumeroSample</code>.</td></tr>
+  <tr><td class="mono">Budget / Pontos</td><td>O orçamento de cada jogador para comprar Pokémon. Definido na <code>Configuracao</code> (campo <code>BudgetPontos</code>).</td></tr>
+  <tr><td class="mono">Custo</td><td>Quanto um Pokémon ou item "vale" em pontos. Campo <code>Custo</code> em <code>Pokemon</code> e <code>Item</code>.</td></tr>
+  <tr><td class="mono">Ban</td><td>Remover um Pokémon do pool para que <b>ninguém</b> possa comprá-lo. Não custa pontos.</td></tr>
+  <tr><td class="mono">Venda</td><td>Devolver um Pokémon já comprado e recuperar <b>parte</b> dos pontos (multiplicado pelo <code>FatorVenda</code>, ex.: 0.5 = metade).</td></tr>
+  <tr><td class="mono">Overall</td><td>A "nota" de força de um Pokémon já montado. É o número que decide quem vence cada duelo.</td></tr>
+  <tr><td class="mono">IV</td><td><i>Individual Values</i> — valores de 0 a 31 por status, sorteados. Pequeno ajuste fino na força.</td></tr>
+  <tr><td class="mono">Natureza</td><td>Característica do Pokémon que aumenta um status e reduz outro. Sorteada (não escolhida).</td></tr>
+  <tr><td class="mono">Tipagem</td><td>Os 18 tipos elementais (Fogo, Água, ...). Alguns têm vantagem sobre outros na batalha.</td></tr>
+  <tr><td class="mono">Confronto</td><td>Um duelo 1×1 dentro da batalha simulada. Uma batalha tem vários confrontos.</td></tr>
+</table>
+
+<h3>1.3 As regras do jogo, em detalhe</h3>
+
+<h4>a) Draft de Pokémon</h4>
+<ul>
+  <li>O sistema sorteia <b>vários samples</b> de Pokémon (quantidade e tamanho definidos na <code>Configuracao</code>).</li>
+  <li>Os dois jogadores veem <b>os mesmos samples</b> — o que um pegar, o outro não pega mais.</li>
+  <li>Cada jogador pode <b>banir</b> Pokémon (limite definido em <code>BansPorJogador</code>). Pokémon banido sai de jogo para os dois.</li>
+  <li>Cada jogador pode <b>comprar</b> Pokémon, gastando pontos do seu budget.</li>
+  <li>Quando os pontos acabam, o jogador <b>não pode comprar mais</b> — a menos que venda alguém.</li>
+  <li><b>Venda:</b> devolve um Pokémon do time e recupera <code>Custo × FatorVenda</code> pontos (sempre menos do que pagou).</li>
+</ul>
+
+<h4>b) Draft de itens</h4>
+<ul>
+  <li>Existe <b>um único sample de itens</b> por partida (não vários, como nos Pokémon), também compartilhado.</li>
+  <li>Cada item pode ser <b>equipado em um Pokémon do time</b>, somando <code>BonusOverall</code> ao overall dele.</li>
+  <li>Um Pokémon carrega no máximo um item (campo <code>ItemId</code> em <code>EscolhaPokemon</code>, que é opcional).</li>
+</ul>
+
+<h4>c) Cálculo do overall</h4>
+<p>O overall tem duas partes:</p>
+<table>
+  <tr><th style="width:28%">Parte</th><th>Entra no cálculo</th><th>Onde fica guardado</th></tr>
+  <tr>
+    <td><b>Overall base</b><br><span class="muted">calculado no fim do draft</span></td>
+    <td>Status base do Pokémon + bônus do item equipado + natureza + IVs</td>
+    <td><code>EscolhaPokemon.OverallBase</code></td>
+  </tr>
+  <tr>
+    <td><b>Overall de confronto</b><br><span class="muted">calculado na hora da batalha</span></td>
+    <td>Overall base + extras por: vantagem de tipagem contra o adversário daquele duelo, velocidade e tipo de ataque</td>
+    <td><code>ConfrontoBatalha.OverallA</code> e <code>OverallB</code></td>
+  </tr>
+</table>
+<div class="callout">
+  Por que separar os dois? Porque o overall base é <b>fixo</b> (não depende do oponente), mas a
+  vantagem de tipagem só existe <b>contra um adversário específico</b>. O mesmo Pokémon pode ter
+  overall de confronto diferente dependendo de quem ele enfrenta.
+</div>
+
+<h4>d) Simulação da batalha</h4>
+<ol>
+  <li>Antes de simular, cada jogador define a <b>ordem</b> do seu time (campo <code>OrdemNaBatalha</code>).</li>
+  <li>Os times se enfrentam <b>1×1 na ordem</b>: o 1º do jogador A contra o 1º do jogador B, o 2º contra o 2º, e assim por diante.</li>
+  <li>Em cada confronto, calcula-se o overall de confronto dos dois lados. Quem tiver o maior, vence e ganha <b>1 ponto</b> para o seu jogador.</li>
+  <li>Ao final, quem tiver <b>mais pontos</b> vence a batalha.</li>
+  <li><b>Empate</b> (ex.: 3–3): vence quem tiver a <b>maior média de overall</b> do time.</li>
+</ol>
+
+<h4>e) O que fica fora do escopo</h4>
+<ul>
+  <li>Mais de uma geração de Pokémon.</li>
+  <li>Draft de golpes (moveset) — os Pokémon não escolhem ataques.</li>
+  <li>Escolher IVs e Naturezas manualmente — o sistema sorteia.</li>
+</ul>
+
+<h3>1.4 Fluxo completo de uma partida</h3>
+<div class="ascii"><b>1. CRIAR PARTIDA</b>
+   Escolher os 2 jogadores + a configuração (regras)
+   → cria 1 registro em <b>Partidas</b> com Status = "Configuracao"
+
+<b>2. SORTEAR OS POOLS</b>
+   Sortear N samples de Pokémon + o sample único de itens
+   → cria vários registros em <b>PokemonNoPool</b> e <b>ItensNoPool</b>
+   → Partida.Status vira "Draft"
+
+<b>3. DRAFT</b>  (repete até os dois times ficarem prontos)
+   ├─ banir Pokémon      → PokemonNoPool.Banido = true      + <b>MovimentacaoDraft</b>
+   ├─ comprar Pokémon    → cria <b>EscolhaPokemon</b>, gasta pontos  + <b>MovimentacaoDraft</b>
+   ├─ vender Pokémon     → EscolhaPokemon.Vendida = true, devolve pontos + <b>MovimentacaoDraft</b>
+   └─ equipar item       → EscolhaPokemon.ItemId = X        + <b>MovimentacaoDraft</b>
+
+<b>4. ORDENAR O TIME</b>
+   Cada jogador define EscolhaPokemon.OrdemNaBatalha (1, 2, 3...)
+   → Partida.Status vira "Batalha"
+
+<b>5. SIMULAR A BATALHA</b>
+   Para cada posição: calcula overall dos dois lados e decide o vencedor
+   → cria 1 registro em <b>ConfrontosBatalha</b> por duelo
+   → soma os pontos em Partida.PontosJogadorA / PontosJogadorB
+   → define Partida.VencedorJogadorId (empate: desempata pela média do overall)
+   → Partida.Status vira "Finalizada"
+</div>
+<p class="muted">
+  Repare que praticamente toda ação do jogador gera <b>dois</b> efeitos: muda o estado atual
+  (ex.: cria a escolha) <b>e</b> registra a movimentação no histórico. Isso permite reconstruir
+  o saldo de pontos e mostrar o log do draft na tela.
+</p>
+
+<!-- ============ 2. ARQUITETURA ============ -->
+<h2 class="page-break">2. Arquitetura</h2>
+
+<h3>2.1 Stack e por que cada escolha</h3>
+<table>
+  <tr><th style="width:16%">Camada</th><th style="width:30%">Tecnologia</th><th>Papel e justificativa</th></tr>
+  <tr>
+    <td>Backend</td><td>C# · ASP.NET Core MVC · .NET 8</td>
+    <td>Roda no servidor. Guarda as <b>regras do jogo</b> (validação de saldo, sorteio, cálculo de overall). É o exigido pela disciplina. Versão 8 porque é LTS e é a usada nas aulas.</td>
+  </tr>
+  <tr>
+    <td>API</td><td>Controllers REST retornando JSON</td>
+    <td>Expõe os dados para o frontend via <code>GET/POST/PUT/DELETE</code>. É o padrão CRUD pedido no planejamento.</td>
+  </tr>
+  <tr>
+    <td>Banco</td><td>SQLite + Entity Framework Core 8</td>
+    <td>O banco inteiro é <b>um arquivo</b> (<code>pokedraft.db</code>). Ninguém precisa instalar nem configurar servidor de banco — crítico num grupo de 4 máquinas diferentes. O EF Core traduz classes C# em tabelas.</td>
+  </tr>
+  <tr>
+    <td>Frontend</td><td>HTML · CSS · JavaScript (<code>fetch</code>)</td>
+    <td>Sem framework (React/Angular). Views em Razor (<code>.cshtml</code>) e o JS chama a nossa própria API.</td>
+  </tr>
+  <tr>
+    <td>Dados</td><td>PokéAPI (pokeapi.co)</td>
+    <td>API pública e gratuita com status, tipos e sprites. Vamos <b>importar</b> para o nosso banco (não consultar em tempo real, para a tela não depender da internet).</td>
+  </tr>
+  <tr>
+    <td>Apoio</td><td>Git + GitHub · Trello</td>
+    <td>Versionamento e quadro Kanban de tarefas.</td>
+  </tr>
+</table>
+<div class="callout warn">
+  <b>Mudança em relação ao planejamento original:</b> o documento previa <b>MySQL</b>. Trocamos por
+  <b>SQLite</b>. Motivo: MySQL exigiria cada integrante instalar e configurar um servidor, criar
+  usuário/senha e manter a connection string diferente em cada máquina — muita chance de "na minha
+  máquina funciona". Com SQLite o banco é gerado por comando e é idêntico para todos. O código C#
+  é praticamente o mesmo: se um dia quisermos trocar, muda-se o pacote e uma linha no <code>Program.cs</code>.
+</div>
+
+<h3>2.2 O padrão MVC</h3>
+<p>MVC divide o sistema em três responsabilidades. A analogia clássica é um restaurante:</p>
+<table>
+  <tr><th style="width:16%">Peça</th><th style="width:24%">Analogia</th><th>No nosso projeto</th></tr>
+  <tr><td><b>Model</b></td><td>A cozinha e os ingredientes</td><td>As classes em <code>Models/Entities/</code> e o acesso ao banco em <code>Data/</code>. São os dados e as regras.</td></tr>
+  <tr><td><b>Controller</b></td><td>O garçom</td><td>As classes em <code>Controllers/</code>. Recebem a requisição, chamam o Model e devolvem a resposta (uma View ou um JSON).</td></tr>
+  <tr><td><b>View</b></td><td>O prato servido na mesa</td><td>Os arquivos <code>.cshtml</code> em <code>Views/</code>. O HTML que o usuário enxerga.</td></tr>
+</table>
+<div class="callout rule">
+  <b>Regra prática:</b> o Controller <b>nunca</b> monta HTML. A View <b>nunca</b> acessa o banco.
+  E as regras do jogo (cálculo de overall, validação de saldo) não ficam espalhadas na View —
+  ficam no backend.
+</div>
+
+<h3>2.3 Duas formas de ligar frontend e backend</h3>
+<table>
+  <tr><th style="width:22%">Abordagem</th><th style="width:38%">Como funciona</th><th>Onde usamos</th></tr>
+  <tr>
+    <td><b>View Razor</b><br><span class="muted">clássica</span></td>
+    <td>O Controller já devolve o HTML pronto com <code>return View(dados)</code>.</td>
+    <td>Páginas simples e estáticas: a home, telas de listagem sem interação pesada.</td>
+  </tr>
+  <tr>
+    <td><b>API + JavaScript</b><br><span class="muted">dinâmica</span></td>
+    <td>O Controller devolve <b>JSON</b>; o JavaScript no navegador chama com <code>fetch()</code> e monta/atualiza a tela sem recarregar a página.</td>
+    <td>A tela do draft, que muda a cada ban/compra/venda sem recarregar. É o foco do projeto.</td>
+  </tr>
+</table>
+
+<h3>2.4 O caminho completo de uma requisição</h3>
+<p>Exemplo: o jogador clica em "Comprar" um Pokémon na tela do draft.</p>
+<div class="ascii"><b>NAVEGADOR</b>
+   │  usuário clica no botão "Comprar"
+   ▼
+<b>JavaScript</b>  (wwwroot/js/site.js)
+   │  fetch("/api/draft/comprar", { method:"POST", headers:{...}, body: JSON })
+   ▼
+<b>ROTEAMENTO ASP.NET</b>  (configurado em Program.cs)
+   │  descobre qual Controller e qual método atende essa URL + verbo
+   ▼
+<b>CONTROLLER</b>  (Controllers/DraftController.cs)
+   │  valida a entrada, aplica a regra (o jogador tem saldo? o Pokémon está livre?)
+   ▼
+<b>DbContext</b>  (Data/PokeDraftDbContext.cs)
+   │  _context.EscolhasPokemon.Add(...);  _context.SaveChanges();
+   ▼
+<b>EF CORE</b>
+   │  traduz o objeto C# em comandos SQL
+   ▼
+<b>SQLite</b>  (arquivo pokedraft.db)
+   │  INSERT INTO EscolhasPokemon (...)  →  grava
+   ▲
+   │  ... e o caminho volta:
+<b>CONTROLLER</b> devolve  return Ok(novoEstado)   →  vira JSON
+   ▲
+<b>JavaScript</b> recebe o JSON e atualiza a tela (saldo, lista, time)
+</div>
+<p class="muted">
+  Entender esse caminho é o que permite <b>debugar</b>: quando algo não funciona, você consegue
+  perguntar "parou em qual etapa?" — o clique disparou? o fetch saiu? a rota bateu? o controller
+  rodou? o banco gravou?
+</p>
+
+<h3>2.5 O que pode e o que não pode ir em cada pasta</h3>
+<table>
+  <tr><th style="width:22%">Pasta</th><th style="width:39%">Deve conter</th><th>Não deve conter</th></tr>
+  <tr><td class="mono">Models/Entities/</td><td>Classes que representam tabelas: propriedades e relacionamentos.</td><td>Acesso a banco, chamadas HTTP, lógica de tela.</td></tr>
+  <tr><td class="mono">Models/Enums/</td><td>Listas de valores fixos.</td><td>Qualquer lógica.</td></tr>
+  <tr><td class="mono">Data/</td><td>O <code>DbContext</code> e configuração de mapeamento.</td><td>Regras do jogo.</td></tr>
+  <tr><td class="mono">Controllers/</td><td>Receber requisição, validar, chamar o Model, devolver resposta.</td><td>HTML montado em string; cálculos longos (esses vão para uma classe de serviço).</td></tr>
+  <tr><td class="mono">Views/</td><td>HTML com Razor: laços, condições, exibição de dados.</td><td>Consulta ao banco, regra de negócio.</td></tr>
+  <tr><td class="mono">wwwroot/</td><td>CSS, JS, imagens, sprites — arquivos que o navegador baixa.</td><td>Nada de C#. Nada sensível: <b>tudo aqui é público</b>.</td></tr>
+  <tr><td class="mono">Migrations/</td><td>Arquivos gerados pelo <code>dotnet ef</code>.</td><td>Edição manual (salvo caso raro e combinado com o grupo).</td></tr>
+</table>
+
+<!-- ============ 3. AMBIENTE ============ -->
+<h2 class="page-break">3. Ambiente de desenvolvimento</h2>
+
+<h3>3.1 Pré-requisitos (uma vez por máquina)</h3>
+<table>
+  <tr><th style="width:24%">Ferramenta</th><th style="width:30%">Onde baixar</th><th>Como conferir</th></tr>
+  <tr><td><b>.NET SDK 8.0</b></td><td>dotnet.microsoft.com/download/dotnet/8.0</td><td><code>dotnet --version</code> → deve mostrar <code>8.x</code></td></tr>
+  <tr><td><b>Git</b></td><td>git-scm.com/downloads</td><td><code>git --version</code></td></tr>
+  <tr><td><b>Visual Studio Code</b></td><td>code.visualstudio.com</td><td>Instalar as extensões <b>C#</b> e <b>C# Dev Kit</b></td></tr>
+  <tr><td><b>dotnet-ef</b> (CLI do EF Core)</td><td><code>dotnet tool install --global dotnet-ef --version 8.*</code></td><td><code>dotnet ef --version</code></td></tr>
+</table>
+<div class="callout">
+  Se a máquina tiver <b>.NET 10</b> (ou outra versão nova) instalado junto com o 8, tudo bem:
+  o arquivo <code>global.json</code> na raiz força o projeto a usar o SDK 8. É por isso que ele existe.
+</div>
+
+<h3>3.2 Rodando o projeto pela primeira vez</h3>
+<pre><span class="cm"># 1. baixar o repositório</span>
+git clone https://github.com/eduardowoz/PokeDraft-DesenvolvimentoSoftwereVIsual.git
+cd PokeDraft-DesenvolvimentoSoftwereVIsual
+
+<span class="cm"># 2. baixar os pacotes NuGet que o projeto usa</span>
+dotnet restore
+
+<span class="cm"># 3. criar o banco pokedraft.db a partir das migrations</span>
+dotnet ef database update --project PokeDraft.Web
+
+<span class="cm"># 4. rodar</span>
+dotnet run --project PokeDraft.Web</pre>
+<p>O terminal mostra algo como <code>Now listening on: http://localhost:5248</code> — abra esse endereço no navegador. Para parar: <code>Ctrl + C</code>.</p>
+
+<h3>3.3 Comandos do dia a dia</h3>
+<table>
+  <tr><th style="width:44%">Comando</th><th>Para que serve</th></tr>
+  <tr><td class="mono">dotnet build</td><td>Compila. <b>Rode antes de todo commit</b> — se der erro aqui, não commita.</td></tr>
+  <tr><td class="mono">dotnet run --project PokeDraft.Web</td><td>Roda a aplicação.</td></tr>
+  <tr><td class="mono">dotnet watch --project PokeDraft.Web</td><td>Roda e <b>recarrega sozinho</b> quando você salva um arquivo. Ótimo para mexer em tela.</td></tr>
+  <tr><td class="mono">dotnet ef migrations add Nome --project PokeDraft.Web</td><td>Gera uma migration depois de mudar as entidades.</td></tr>
+  <tr><td class="mono">dotnet ef database update --project PokeDraft.Web</td><td>Aplica as migrations pendentes no seu <code>pokedraft.db</code>.</td></tr>
+  <tr><td class="mono">dotnet ef migrations remove --project PokeDraft.Web</td><td>Desfaz a <b>última</b> migration (só se ela ainda não foi aplicada/commitada).</td></tr>
+  <tr><td class="mono">dotnet ef migrations list --project PokeDraft.Web</td><td>Lista as migrations e quais já foram aplicadas.</td></tr>
+</table>
+
+<h3>3.4 Problemas comuns</h3>
+<table>
+  <tr><th style="width:34%">Sintoma</th><th>Causa provável e solução</th></tr>
+  <tr><td><code>dotnet ef</code> não é reconhecido</td><td>A ferramenta não está instalada nessa máquina. Rode <code>dotnet tool install --global dotnet-ef --version 8.*</code> e <b>abra um terminal novo</b>.</td></tr>
+  <tr><td>"no such table: ..." ao rodar</td><td>O banco não foi criado ou está desatualizado. Rode <code>dotnet ef database update --project PokeDraft.Web</code>.</td></tr>
+  <tr><td>Deu <code>git pull</code> e o sistema quebrou</td><td>Provavelmente vieram migrations novas. Rode <code>dotnet ef database update</code>. Se persistir, <code>dotnet restore</code> (pode ter pacote novo).</td></tr>
+  <tr><td>Banco "bagunçado" durante testes</td><td>Apague o arquivo <code>PokeDraft.Web/pokedraft.db</code> e rode <code>dotnet ef database update</code>. Ele é descartável — não tem nada que não possa ser recriado.</td></tr>
+  <tr><td>Erro de versão do SDK</td><td>Confira <code>dotnet --version</code>. Se não for 8.x, falta instalar o SDK 8 (o <code>global.json</code> exige ele).</td></tr>
+  <tr><td>CSS/JS não carrega na página</td><td>O arquivo precisa estar dentro de <code>wwwroot/</code>. Fora dela o navegador não acessa.</td></tr>
+  <tr><td>O <code>fetch</code> retorna 404</td><td>A rota do JavaScript está diferente da rota do Controller. Confira letra por letra, incluindo singular/plural.</td></tr>
+</table>
+
+<!-- ============ 4. MAPA DE ARQUIVOS ============ -->
+<h2 class="page-break">4. Mapa completo de arquivos</h2>
+
+<h3>4.0 Visão geral da árvore</h3>
+<div class="ascii"><b>PokeDraft-DesenvolvimentoSoftwereVIsual/</b>          <span class="c">raiz do repositório</span>
+├─ PokeDraft.sln
+├─ global.json
+├─ README.md
+├─ .gitignore
+├─ .gitattributes
+├─ docs/                                          <span class="c">documentação (este manual)</span>
+└─ <b>PokeDraft.Web/</b>                                  <span class="c">o projeto da aplicação</span>
+   ├─ PokeDraft.Web.csproj
+   ├─ Program.cs
+   ├─ appsettings.json
+   ├─ appsettings.Development.json
+   ├─ pokedraft.db                                <span class="c">o banco (não versionado)</span>
+   ├─ Properties/
+   │  └─ launchSettings.json
+   ├─ <b>Controllers/</b>
+   │  └─ HomeController.cs
+   ├─ <b>Models/</b>
+   │  ├─ ErrorViewModel.cs
+   │  ├─ <b>Entities/</b>                                <span class="c">10 classes = 10 tabelas</span>
+   │  │  ├─ Pokemon.cs
+   │  │  ├─ Item.cs
+   │  │  ├─ Jogador.cs
+   │  │  ├─ Configuracao.cs
+   │  │  ├─ Partida.cs
+   │  │  ├─ PokemonNoPool.cs
+   │  │  ├─ ItemNoPool.cs
+   │  │  ├─ EscolhaPokemon.cs
+   │  │  ├─ MovimentacaoDraft.cs
+   │  │  └─ ConfrontoBatalha.cs
+   │  └─ <b>Enums/</b>
+   │     ├─ TipoPokemon.cs
+   │     ├─ StatusPartida.cs
+   │     └─ TipoMovimentacao.cs
+   ├─ <b>Data/</b>
+   │  └─ PokeDraftDbContext.cs
+   ├─ <b>Migrations/</b>
+   │  ├─ 20260828125500_InicialCreate.cs
+   │  ├─ 20260828125500_InicialCreate.Designer.cs
+   │  └─ PokeDraftDbContextModelSnapshot.cs
+   ├─ <b>Views/</b>
+   │  ├─ _ViewImports.cshtml
+   │  ├─ _ViewStart.cshtml
+   │  ├─ Home/
+   │  │  ├─ Index.cshtml
+   │  │  └─ Privacy.cshtml
+   │  └─ Shared/
+   │     ├─ _Layout.cshtml
+   │     ├─ _Layout.cshtml.css
+   │     ├─ Error.cshtml
+   │     └─ _ValidationScriptsPartial.cshtml
+   └─ <b>wwwroot/</b>
+      ├─ favicon.ico
+      ├─ css/site.css
+      ├─ js/site.js
+      └─ lib/                                     <span class="c">Bootstrap e jQuery</span>
+</div>
+
+<h3 class="page-break">4.1 Arquivos da raiz</h3>
+
+<div class="card">
+  <h4><span class="fname">PokeDraft.sln</span></h4>
+  <p><b>O que é:</b> o arquivo de <i>solução</i>. Uma solução é apenas uma <b>lista de projetos</b> que formam o sistema.</p>
+  <p><b>Por que existe:</b> hoje temos um único projeto (<code>PokeDraft.Web</code>), mas se um dia criarmos outro (ex.: um projeto separado só para os testes, ou um console para o importador da PokéAPI), ele é adicionado aqui e todos passam a compilar juntos com um <code>dotnet build</code> na raiz.</p>
+  <p><b>Você edita?</b> Não à mão. Use <code>dotnet sln add caminho/do/projeto.csproj</code>.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">global.json</span></h4>
+  <p><b>O que é:</b> trava a versão do SDK do .NET usada no projeto.</p>
+  <pre>{ "sdk": { "version": "8.0.424", "rollForward": "latestFeature" } }</pre>
+  <p><b>Por que existe:</b> várias máquinas do grupo podem ter versões diferentes do .NET instaladas. Sem esse arquivo, um PC com .NET 10 compilaria com regras diferentes de um PC com .NET 8, gerando bugs que só acontecem "na máquina de fulano". Com ele, todo mundo usa o mesmo SDK.</p>
+  <p><b>O <code>rollForward</code>:</b> permite usar uma versão 8.0.x mais nova se a exata (8.0.424) não estiver instalada — mas nunca pular para o 9 ou 10.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">README.md</span></h4>
+  <p><b>O que é:</b> o documento de apresentação do repositório. É o que o GitHub mostra automaticamente na página inicial do projeto.</p>
+  <p><b>O que contém:</b> descrição do sistema, tabela de tecnologias, pré-requisitos, como rodar, estrutura de pastas, modelo de dados, fluxo de Git e cronograma.</p>
+  <p><b>Importante:</b> o README precisa ser mantido atualizado — é o primeiro lugar que o professor vai olhar na entrega final.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">.gitignore</span></h4>
+  <p><b>O que é:</b> a lista do que o Git deve <b>ignorar</b>.</p>
+  <p><b>O que ignoramos e por quê:</b></p>
+  <table>
+    <tr><th style="width:26%">Item</th><th>Motivo</th></tr>
+    <tr><td class="mono">bin/ e obj/</td><td>Resultado da compilação. São gerados por <code>dotnet build</code> e mudam a cada compilação — versionar isso encheria o repositório de conflitos inúteis.</td></tr>
+    <tr><td class="mono">*.db</td><td>O banco SQLite. Cada integrante gera o seu com <code>dotnet ef database update</code>. Se versionássemos, todo mundo teria conflito toda vez que testasse alguma coisa.</td></tr>
+    <tr><td class="mono">.vs/ e .vscode/</td><td>Configuração pessoal do editor de cada um.</td></tr>
+  </table>
+  <div class="callout warn" style="margin-bottom:0">
+    <b>O que NÃO é ignorado (e é essencial):</b> a pasta <code>Migrations/</code>. Ela é a "receita" para
+    qualquer pessoa reconstruir o banco. Versionar as migrations e ignorar o <code>.db</code> é o que
+    permite os 4 trabalharem sem pisar no banco um do outro.
+  </div>
+</div>
+
+<div class="card">
+  <h4><span class="fname">.gitattributes</span></h4>
+  <p><b>O que é:</b> padroniza o caractere de "fim de linha" dos arquivos de texto.</p>
+  <p><b>Por que importa:</b> Windows termina linhas com <code>CRLF</code> e Linux/Mac com <code>LF</code>. Sem esse arquivo, alguém salvar um arquivo em outro sistema faria o Git marcar o <b>arquivo inteiro</b> como modificado, mesmo sem ninguém ter mudado nada — poluindo os diffs e criando conflitos falsos.</p>
+</div>
+
+<h3 class="page-break">4.2 Arquivos de configuração do projeto</h3>
+
+<div class="card">
+  <h4><span class="fname">PokeDraft.Web/PokeDraft.Web.csproj</span></h4>
+  <p><b>O que é:</b> a definição do projeto — para o .NET, é o arquivo mais importante depois do código.</p>
+  <p><b>O que declara:</b></p>
+  <table>
+    <tr><th style="width:34%">Configuração</th><th>Significado</th></tr>
+    <tr><td class="mono">Sdk="Microsoft.NET.Sdk.Web"</td><td>É um projeto <b>web</b> (traz o ASP.NET Core junto).</td></tr>
+    <tr><td class="mono">&lt;TargetFramework&gt;net8.0&lt;/&gt;</td><td>Compila para .NET 8.</td></tr>
+    <tr><td class="mono">&lt;Nullable&gt;enable&lt;/&gt;</td><td>Liga a checagem de nulos: o compilador avisa quando você pode estar usando algo que é <code>null</code>. É por isso que aparecem <code>?</code> e <code>= null!</code> nas entidades.</td></tr>
+    <tr><td class="mono">&lt;ImplicitUsings&gt;enable&lt;/&gt;</td><td>Importa automaticamente os <code>using</code> mais comuns (<code>System</code>, <code>System.Collections.Generic</code>, etc.), por isso os arquivos têm poucos <code>using</code> no topo.</td></tr>
+  </table>
+  <p><b>Os pacotes NuGet instalados:</b></p>
+  <table>
+    <tr><th style="width:34%">Pacote</th><th>Para que serve</th></tr>
+    <tr><td class="mono">Microsoft.EntityFrameworkCore.Sqlite</td><td>O "tradutor" do EF Core para SQLite. É o que faz <code>UseSqlite(...)</code> existir e o que gera o SQL do SQLite.</td></tr>
+    <tr><td class="mono">Microsoft.EntityFrameworkCore.Design</td><td>Necessário para <b>gerar migrations</b>. Só é usado em tempo de desenvolvimento (não vai para o servidor).</td></tr>
+    <tr><td class="mono">Microsoft.EntityFrameworkCore.Tools</td><td>Comandos do EF dentro do Visual Studio (Package Manager Console). Complementa o <code>dotnet ef</code>.</td></tr>
+  </table>
+  <p class="muted" style="margin-bottom:0">Todos travados na versão <b>8.0.10</b> — a mesma linha do .NET 8. Misturar EF 9 ou 10 com .NET 8 dá erro.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">PokeDraft.Web/Program.cs</span></h4>
+  <p><b>O que é:</b> o ponto de entrada da aplicação. É a primeira coisa que roda. Divide-se em duas metades:</p>
+  <p><b>Metade 1 — registrar serviços</b> (o que a aplicação sabe fazer):</p>
+  <pre>var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();   <span class="cm">// habilita Controllers + Views (MVC)</span>
+
+<span class="cm">// registra o nosso banco: EF Core usando SQLite,</span>
+<span class="cm">// com a connection string que está no appsettings.json</span>
+builder.Services.AddDbContext&lt;PokeDraftDbContext&gt;(options =&gt;
+    options.UseSqlite(builder.Configuration.GetConnectionString("PokeDraftDb")));</pre>
+  <p><b>Metade 2 — montar o pipeline</b> (por onde cada requisição passa, <b>na ordem</b>):</p>
+  <pre>var app = builder.Build();
+
+app.UseHttpsRedirection();   <span class="cm">// http → https</span>
+app.UseStaticFiles();        <span class="cm">// serve o que está em wwwroot/</span>
+app.UseRouting();            <span class="cm">// descobre qual controller atende a URL</span>
+app.UseAuthorization();      <span class="cm">// checa permissões (ainda não usamos)</span>
+
+app.MapControllerRoute(      <span class="cm">// a rota padrão do MVC</span>
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();                   <span class="cm">// sobe o servidor</span></pre>
+  <p><b>A rota padrão explicada:</b> <code>{controller=Home}/{action=Index}/{id?}</code> significa que a URL
+  <code>/Pokemon/Detalhes/25</code> chama o método <code>Detalhes(25)</code> da classe <code>PokemonController</code>.
+  Se a URL for só <code>/</code>, usa os padrões: <code>HomeController.Index()</code>. O <code>?</code> em <code>id</code> quer dizer opcional.</p>
+  <p><b>Você vai mexer aqui quando:</b> registrar um novo serviço (ex.: o <code>HttpClient</code> do importador da PokéAPI) ou uma classe de regra de negócio.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">PokeDraft.Web/appsettings.json</span></h4>
+  <p><b>O que é:</b> o arquivo de configuração da aplicação, em JSON. O <code>Program.cs</code> lê valores daqui.</p>
+  <pre>{
+  "ConnectionStrings": {
+    "PokeDraftDb": "Data Source=pokedraft.db"
+  },
+  "Logging": { ... },
+  "AllowedHosts": "*"
+}</pre>
+  <p><b>A connection string:</b> <code>Data Source=pokedraft.db</code> diz ao SQLite <b>qual arquivo</b> é o banco. O nome <code>"PokeDraftDb"</code> é o que aparece em <code>GetConnectionString("PokeDraftDb")</code> no <code>Program.cs</code> — os dois têm que bater.</p>
+  <p class="muted" style="margin-bottom:0"><b>Regra:</b> nunca coloque senha ou chave de API aqui — este arquivo vai para o Git.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">PokeDraft.Web/appsettings.Development.json</span></h4>
+  <p><b>O que é:</b> configurações que valem <b>apenas em desenvolvimento</b>, sobrescrevendo o <code>appsettings.json</code>.</p>
+  <p>Hoje só ajusta o nível de log. A ideia é poder ter logs detalhados na sua máquina e logs enxutos em produção, sem trocar código.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">PokeDraft.Web/Properties/launchSettings.json</span></h4>
+  <p><b>O que é:</b> define <b>como o projeto é iniciado localmente</b> — portas, se abre o navegador sozinho e qual ambiente usar.</p>
+  <p>No nosso projeto: perfil <code>http</code> em <code>localhost:5248</code> e perfil <code>https</code> em <code>localhost:7223</code>. Os dois definem <code>ASPNETCORE_ENVIRONMENT=Development</code>, que é o que faz o <code>appsettings.Development.json</code> ser carregado.</p>
+  <p class="muted" style="margin-bottom:0">Vale só na sua máquina — não afeta a aplicação publicada.</p>
+</div>
+
+<h3 class="page-break">4.3 Controllers</h3>
+
+<div class="card">
+  <h4><span class="fname">Controllers/HomeController.cs</span></h4>
+  <p><b>O que é:</b> o controller da página inicial. Veio do template do <code>dotnet new mvc</code> e serve de <b>modelo</b> para os controllers que vamos criar.</p>
+  <p><b>O que tem dentro:</b></p>
+  <table>
+    <tr><th style="width:26%">Membro</th><th>Função</th></tr>
+    <tr><td class="mono">Index()</td><td>Devolve a view <code>Views/Home/Index.cshtml</code> (a home do PokéDraft).</td></tr>
+    <tr><td class="mono">Privacy()</td><td>Devolve <code>Views/Home/Privacy.cshtml</code>. Página do template — pode ser removida ou reaproveitada depois.</td></tr>
+    <tr><td class="mono">Error()</td><td>Devolve a tela de erro com o identificador da requisição, para ajudar a rastrear o problema no log.</td></tr>
+    <tr><td class="mono">ILogger&lt;HomeController&gt;</td><td>Recebido no <b>construtor</b> por injeção de dependência. Serve para escrever logs.</td></tr>
+  </table>
+  <p><b>Dois pontos importantes que se repetem em todo controller:</b></p>
+  <ul style="margin-bottom:0">
+    <li>A classe herda de <code>Controller</code> (para MVC com Views) ou de <code>ControllerBase</code> (para API pura, sem Views).</li>
+    <li>O nome do arquivo define a rota: <code>HomeController</code> → URL <code>/Home</code>. O sufixo "Controller" é removido automaticamente.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <b>Os controllers que vamos criar nas próximas aulas:</b>
+  <code>PokemonController</code> (04/09), <code>JogadorController</code>, <code>PartidaController</code>,
+  <code>ConfiguracaoController</code> (11/09) e <code>DraftController</code> (02/10 e 09/10).
+  Os de API vão usar <code>[ApiController]</code> e <code>[Route("api/[controller]")]</code>.
+</div>
+
+<h3>4.4 Models — as entidades do domínio</h3>
+<p>
+  Cada arquivo em <code>Models/Entities/</code> é uma <b>classe C#</b> que o EF Core transforma em uma
+  <b>tabela</b>. As propriedades viram colunas. Abaixo, a ficha de cada uma.
+</p>
+
+<div class="card">
+  <h4><span class="fname">Pokemon.cs</span> — catálogo de Pokémon</h4>
+  <p><b>Representa:</b> um Pokémon disponível no jogo, com os dados importados da PokéAPI. É "a carta" que aparece nos pools.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:14%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">Id</td><td>int</td><td>Chave primária, gerada pelo banco.</td></tr>
+    <tr><td class="mono">PokeApiId</td><td>int</td><td>O id do Pokémon <b>na PokéAPI</b>. Tem índice único: impede o importador de cadastrar o mesmo Pokémon duas vezes.</td></tr>
+    <tr><td class="mono">Nome</td><td>string</td><td>Nome do Pokémon (máx. 60 caracteres).</td></tr>
+    <tr><td class="mono">Tipo1</td><td>TipoPokemon</td><td>Tipo principal. Obrigatório.</td></tr>
+    <tr><td class="mono">Tipo2</td><td>TipoPokemon?</td><td>Segundo tipo. <b>Opcional</b> — muitos Pokémon têm só um.</td></tr>
+    <tr><td class="mono">HpBase, AtaqueBase,<br>DefesaBase, AtaqueEspecialBase,<br>DefesaEspecialBase, VelocidadeBase</td><td>int</td><td>Os seis status base vindos da PokéAPI. São a matéria-prima do cálculo de overall.</td></tr>
+    <tr><td class="mono">TotalStatusBase</td><td>int</td><td>Soma dos seis. Guardado pronto para não ter que somar toda hora — útil para ranquear e para definir o <code>Custo</code>.</td></tr>
+    <tr><td class="mono">Geracao</td><td>int</td><td>Geração do Pokémon. Como o escopo é uma geração só, serve de filtro.</td></tr>
+    <tr><td class="mono">SpriteUrl</td><td>string?</td><td>URL da imagem do Pokémon, para mostrar na tela.</td></tr>
+    <tr><td class="mono">Custo</td><td>int</td><td>Quanto custa em pontos adicionar este Pokémon ao time.</td></tr>
+    <tr><td class="mono">AparicoesEmPools<br>Escolhas</td><td>coleções</td><td>Propriedades de <b>navegação</b>: não viram colunas. Permitem escrever <code>pokemon.Escolhas</code> no C# para acessar os registros relacionados.</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4><span class="fname">Item.cs</span> — catálogo de itens</h4>
+  <p><b>Representa:</b> um item de batalha que pode ser equipado em um Pokémon.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:14%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">Id</td><td>int</td><td>Chave primária.</td></tr>
+    <tr><td class="mono">Nome</td><td>string</td><td>Nome do item (máx. 80).</td></tr>
+    <tr><td class="mono">Descricao</td><td>string?</td><td>O que o item faz, em texto (máx. 400).</td></tr>
+    <tr><td class="mono">Categoria</td><td>string?</td><td>Agrupamento livre (ex.: "Berry", "Held Item"). Ajuda a filtrar na tela.</td></tr>
+    <tr><td class="mono">BonusOverall</td><td>int</td><td><b>Quanto o item soma ao overall</b> do Pokémon que o carrega.</td></tr>
+    <tr><td class="mono">SpriteUrl</td><td>string?</td><td>Imagem do item.</td></tr>
+    <tr><td class="mono">Custo</td><td>int</td><td>Custo em pontos para adquirir.</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4><span class="fname">Jogador.cs</span> — participante</h4>
+  <p><b>Representa:</b> uma pessoa que joga. Cada partida tem exatamente dois.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:14%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">Id</td><td>int</td><td>Chave primária.</td></tr>
+    <tr><td class="mono">Nome</td><td>string</td><td>Nome do jogador (máx. 60).</td></tr>
+    <tr><td class="mono">CriadoEm</td><td>DateTime</td><td>Data de cadastro. Preenchido automaticamente com a data/hora atual.</td></tr>
+  </table>
+  <p class="muted" style="margin-bottom:0">Entidade simples de propósito — não temos login/senha no escopo.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">Configuracao.cs</span> — as regras do draft</h4>
+  <p><b>Representa:</b> um "preset" reutilizável de regras. Em vez de fixar os números no código, eles ficam no banco e podem ser ajustados sem recompilar. Uma partida aponta para uma configuração.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:12%">Padrão</th><th>Significado</th></tr>
+    <tr><td class="mono">Nome</td><td>—</td><td>Nome do preset (ex.: "Padrão", "Rápido"). Tem índice único.</td></tr>
+    <tr><td class="mono">BudgetPontos</td><td>100</td><td>Pontos que cada jogador recebe.</td></tr>
+    <tr><td class="mono">QuantidadeSamples</td><td>5</td><td>Quantos samples de Pokémon são sorteados.</td></tr>
+    <tr><td class="mono">PokemonPorSample</td><td>6</td><td>Quantos Pokémon cada sample contém.</td></tr>
+    <tr><td class="mono">TamanhoTime</td><td>6</td><td>Máximo de Pokémon no time de cada jogador.</td></tr>
+    <tr><td class="mono">BansPorJogador</td><td>2</td><td>Quantos banimentos cada um pode fazer.</td></tr>
+    <tr><td class="mono">FatorVenda</td><td>0.5</td><td>Multiplicador aplicado ao custo na venda. 0.5 = recupera metade.</td></tr>
+    <tr><td class="mono">CriadaEm</td><td>agora</td><td>Data de criação do preset.</td></tr>
+  </table>
+  <p class="muted" style="margin-bottom:0">Já existe uma configuração <b>"Padrão"</b> cadastrada automaticamente (ver seção 5.5).</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">Partida.cs</span> — a entidade central</h4>
+  <p><b>Representa:</b> uma disputa entre dois jogadores. É o "hub" do sistema: quase todas as outras tabelas apontam para ela.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:16%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">Nome</td><td>string?</td><td>Rótulo opcional da partida.</td></tr>
+    <tr><td class="mono">Status</td><td>StatusPartida</td><td>Em que etapa está: Configuracao → Draft → Batalha → Finalizada. <b>Controla o que o sistema permite fazer</b> (ex.: não dá para comprar Pokémon se o status já é "Batalha").</td></tr>
+    <tr><td class="mono">CriadaEm / FinalizadaEm</td><td>DateTime / ?</td><td>Início e fim. <code>FinalizadaEm</code> fica nulo até a batalha terminar.</td></tr>
+    <tr><td class="mono">ConfiguracaoId</td><td>int (FK)</td><td>Qual conjunto de regras esta partida usa.</td></tr>
+    <tr><td class="mono">JogadorAId / JogadorBId</td><td>int (FK)</td><td>Os dois participantes.</td></tr>
+    <tr><td class="mono">VencedorJogadorId</td><td>int? (FK)</td><td>Quem venceu. Nulo até finalizar.</td></tr>
+    <tr><td class="mono">PontosJogadorA / B</td><td>int</td><td>O <b>placar</b> da batalha: quantos confrontos cada lado venceu.</td></tr>
+    <tr><td class="mono">PokemonNoPool, ItensNoPool,<br>Escolhas, Movimentacoes,<br>Confrontos</td><td>coleções</td><td>Navegação para tudo que pertence a esta partida.</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4><span class="fname">PokemonNoPool.cs</span> — os Pokémon sorteados</h4>
+  <p><b>Representa:</b> a presença de um Pokémon em um sample de uma partida. Aqui vive o <b>estado do draft</b>: se foi banido, se já foi comprado e por quem.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:14%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">PartidaId</td><td>int (FK)</td><td>De qual partida é este pool.</td></tr>
+    <tr><td class="mono">PokemonId</td><td>int (FK)</td><td>Qual Pokémon do catálogo foi sorteado.</td></tr>
+    <tr><td class="mono">NumeroSample</td><td>int</td><td>Em qual sample (1, 2, 3...) ele apareceu.</td></tr>
+    <tr><td class="mono">Banido</td><td>bool</td><td>Se <code>true</code>, ninguém pode comprá-lo.</td></tr>
+    <tr><td class="mono">BanidoPorJogadorId</td><td>int?</td><td>Quem baniu (para o histórico e para contar o limite de bans).</td></tr>
+    <tr><td class="mono">CompradoPorJogadorId</td><td>int?</td><td>Quem comprou. Enquanto for nulo, o Pokémon está <b>disponível</b>.</td></tr>
+  </table>
+  <p class="muted" style="margin-bottom:0"><b>Por que não guardar isso direto na tabela <code>Pokemon</code>?</b> Porque o mesmo Pikachu pode estar em várias partidas ao mesmo tempo, banido numa e comprado em outra. O estado pertence à partida, não ao catálogo.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">ItemNoPool.cs</span> — os itens disponíveis</h4>
+  <p><b>Representa:</b> um item no sample único de itens de uma partida. Mesma lógica do <code>PokemonNoPool</code>, mas mais simples (itens não são banidos e há um só sample).</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:14%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">PartidaId</td><td>int (FK)</td><td>De qual partida.</td></tr>
+    <tr><td class="mono">ItemId</td><td>int (FK)</td><td>Qual item do catálogo.</td></tr>
+    <tr><td class="mono">AdquiridoPorJogadorId</td><td>int?</td><td>Quem pegou. Nulo = ainda disponível.</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4><span class="fname">EscolhaPokemon.cs</span> — um Pokémon no time</h4>
+  <p><b>Representa:</b> um Pokémon que um jogador <b>comprou e colocou no time</b>, já com item, natureza, IVs, posição de batalha e overall calculado. É a entidade mais rica do sistema.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:14%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">PartidaId / JogadorId</td><td>int (FK)</td><td>De qual partida e de qual jogador é este Pokémon.</td></tr>
+    <tr><td class="mono">PokemonId</td><td>int (FK)</td><td>Qual Pokémon do catálogo.</td></tr>
+    <tr><td class="mono">ItemId</td><td>int? (FK)</td><td>Item equipado. Opcional — nem todo Pokémon carrega item.</td></tr>
+    <tr><td class="mono">PontosGastos</td><td>int</td><td>Quanto custou <b>no momento da compra</b>. Guardado aqui porque o custo do catálogo pode mudar depois — o histórico tem que refletir o que realmente aconteceu.</td></tr>
+    <tr><td class="mono">OrdemNaBatalha</td><td>int?</td><td>Posição na batalha (1 = enfrenta o 1º do adversário). Nulo enquanto o jogador não ordenou.</td></tr>
+    <tr><td class="mono">Natureza</td><td>string?</td><td>Natureza sorteada.</td></tr>
+    <tr><td class="mono">IvHp, IvAtaque, IvDefesa,<br>IvAtaqueEspecial,<br>IvDefesaEspecial, IvVelocidade</td><td>int</td><td>Os seis IVs sorteados (0 a 31 cada).</td></tr>
+    <tr><td class="mono">OverallBase</td><td>int</td><td>O overall calculado fora da batalha (status + item + natureza + IVs).</td></tr>
+    <tr><td class="mono">Vendida</td><td>bool</td><td>Se o jogador vendeu este Pokémon. <b>O registro não é apagado</b> — fica marcado, preservando o histórico.</td></tr>
+    <tr><td class="mono">PontosRecebidosNaVenda</td><td>int?</td><td>Quantos pontos voltaram na venda.</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4><span class="fname">MovimentacaoDraft.cs</span> — o histórico</h4>
+  <p><b>Representa:</b> o registro de <b>cada ação</b> feita no draft. É o "extrato bancário" da partida.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:18%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">PartidaId / JogadorId</td><td>int (FK)</td><td>De qual partida e quem fez a ação.</td></tr>
+    <tr><td class="mono">Tipo</td><td>TipoMovimentacao</td><td>Banimento, CompraPokemon, VendaPokemon, EquiparItem ou RemoverItem.</td></tr>
+    <tr><td class="mono">PokemonId / ItemId</td><td>int? (FK)</td><td>O que foi envolvido. Ambos opcionais porque depende do tipo da ação.</td></tr>
+    <tr><td class="mono">VariacaoPontos</td><td>int</td><td>Quanto mudou no saldo: <b>negativo</b> em compras, <b>positivo</b> em vendas, <b>zero</b> em bans.</td></tr>
+    <tr><td class="mono">SaldoResultante</td><td>int</td><td>O saldo do jogador logo após a ação. Facilita mostrar o extrato sem recalcular tudo.</td></tr>
+    <tr><td class="mono">Descricao</td><td>string?</td><td>Texto livre para exibir na tela (ex.: "Comprou Charizard por 25 pontos").</td></tr>
+    <tr><td class="mono">Momento</td><td>DateTime</td><td>Quando aconteceu — define a ordem cronológica do log.</td></tr>
+  </table>
+  <p class="muted" style="margin-bottom:0"><b>Por que ter essa tabela?</b> Ela é a entrega do dia 09/10 ("histórico de movimentações"), permite mostrar o log do draft na tela e é a forma de auditar/depurar quando um saldo aparecer errado.</p>
+</div>
+
+<div class="card">
+  <h4><span class="fname">ConfrontoBatalha.cs</span> — um duelo</h4>
+  <p><b>Representa:</b> um confronto 1×1 da batalha simulada, com os overalls dos dois lados e quem venceu.</p>
+  <table>
+    <tr><th style="width:32%">Propriedade</th><th style="width:14%">Tipo</th><th>Significado</th></tr>
+    <tr><td class="mono">PartidaId</td><td>int (FK)</td><td>De qual partida.</td></tr>
+    <tr><td class="mono">Ordem</td><td>int</td><td>Qual posição do confronto (1 = primeiros Pokémon de cada time).</td></tr>
+    <tr><td class="mono">EscolhaPokemonAId<br>EscolhaPokemonBId</td><td>int (FK)</td><td>Os dois Pokémon que se enfrentaram. Apontam para <code>EscolhasPokemon</code>, não para o catálogo — porque importa o Pokémon <b>com item e IVs daquele jogador</b>.</td></tr>
+    <tr><td class="mono">OverallA / OverallB</td><td>int</td><td>Os overalls <b>finais</b> do confronto (já com os bônus de tipagem, velocidade e tipo de ataque).</td></tr>
+    <tr><td class="mono">VencedorJogadorId</td><td>int?</td><td>Quem venceu este duelo. Nulo em caso de empate no confronto.</td></tr>
+  </table>
+  <p class="muted" style="margin-bottom:0">Guardar os overalls calculados permite <b>mostrar o resultado detalhado</b> na tela ("Charizard 187 × 174 Blastoise") em vez de só o placar final.</p>
+</div>
+
+<h4 class="page-break">Os enums — <span class="fname">Models/Enums/</span></h4>
+<p>Um <code>enum</code> é uma lista fechada de valores possíveis. Usar enum em vez de <code>string</code> solta evita erro de digitação: o compilador não deixa escrever <code>StatusPartida.Batalh</code>.</p>
+<table>
+  <tr><th style="width:24%">Arquivo</th><th>Valores e uso</th></tr>
+  <tr><td class="mono">TipoPokemon.cs</td><td>Os 18 tipos: Normal, Fogo, Agua, Eletrico, Planta, Gelo, Lutador, Venenoso, Terrestre, Voador, Psiquico, Inseto, Pedra, Fantasma, Dragao, Sombrio, Aco, Fada. Usado em <code>Pokemon.Tipo1/Tipo2</code> e será a base da tabela de vantagem de tipagem.</td></tr>
+  <tr><td class="mono">StatusPartida.cs</td><td><code>Configuracao(1) → Draft(2) → Batalha(3) → Finalizada(4)</code>. Controla o que é permitido em cada etapa.</td></tr>
+  <tr><td class="mono">TipoMovimentacao.cs</td><td><code>Banimento(1)</code>, <code>CompraPokemon(2)</code>, <code>VendaPokemon(3)</code>, <code>EquiparItem(4)</code>, <code>RemoverItem(5)</code>.</td></tr>
+</table>
+
+<div class="card">
+  <h4><span class="fname">Models/ErrorViewModel.cs</span></h4>
+  <p><b>O que é:</b> um <i>ViewModel</i> — uma classe feita só para <b>alimentar uma tela</b>, não para virar tabela. Este veio do template e carrega o <code>RequestId</code> mostrado na página de erro.</p>
+  <p class="muted" style="margin-bottom:0"><b>Guarde o conceito:</b> vamos criar vários ViewModels próprios (ex.: <code>DraftViewModel</code> com o pool + o time + o saldo juntos). Eles ficam em <code>Models/</code>, <b>fora</b> de <code>Entities/</code>, justamente porque não são tabelas.</p>
+</div>
+
+<h3>4.5 Data — a ponte com o banco</h3>
+
+<div class="card">
+  <h4><span class="fname">Data/PokeDraftDbContext.cs</span></h4>
+  <p><b>O que é:</b> a classe mais importante da camada de dados. Herda de <code>DbContext</code> (do EF Core) e faz três coisas:</p>
+
+  <p><b>1. Declara as tabelas</b> — um <code>DbSet&lt;T&gt;</code> por entidade:</p>
+  <pre>public DbSet&lt;Pokemon&gt; Pokemons =&gt; Set&lt;Pokemon&gt;();
+public DbSet&lt;Item&gt; Itens =&gt; Set&lt;Item&gt;();
+public DbSet&lt;Jogador&gt; Jogadores =&gt; Set&lt;Jogador&gt;();
+<span class="cm">// ... e assim por diante, 10 no total</span></pre>
+  <p>É por meio deles que se consulta e grava: <code>_context.Pokemons.ToList()</code>, <code>_context.Jogadores.Add(j)</code>.</p>
+
+  <p><b>2. Configura o mapeamento</b> no método <code>OnModelCreating</code>:</p>
+  <ul>
+    <li><b>Enums como texto:</b> <code>.HasConversion&lt;string&gt;()</code> faz o banco guardar <code>"Draft"</code> em vez de <code>2</code>. Fica muito mais fácil de ler abrindo o banco direto.</li>
+    <li><b>Índices únicos:</b> em <code>Pokemon.PokeApiId</code> (evita importar duplicado) e <code>Configuracao.Nome</code>.</li>
+    <li><b>Relacionamentos:</b> quem aponta para quem e o que acontece ao apagar (ver seção 5.4).</li>
+    <li><b>Dado inicial:</b> a configuração "Padrão" (ver 5.5).</li>
+  </ul>
+
+  <p><b>3. Recebe as opções por injeção de dependência</b> — o construtor recebe <code>DbContextOptions</code>, que o <code>Program.cs</code> preencheu com "use SQLite, arquivo pokedraft.db".</p>
+
+  <div class="callout" style="margin-bottom:0">
+    <b>Quando você mexe neste arquivo:</b> sempre que criar uma entidade nova (adicionar o <code>DbSet</code>)
+    ou precisar configurar um relacionamento/índice. Depois de mexer, <b>gere uma migration</b>.
+  </div>
+</div>
+
+<h3>4.6 Migrations — o histórico do banco</h3>
+<p>
+  Uma <b>migration</b> é um "commit do formato do banco". Ela guarda, em código, exatamente
+  quais tabelas/colunas criar ou alterar. É isso que permite os 4 integrantes terem bancos
+  idênticos sem passar arquivo <code>.db</code> um para o outro.
+</p>
+<table>
+  <tr><th style="width:38%">Arquivo</th><th>Conteúdo</th></tr>
+  <tr>
+    <td class="mono">20260828125500_InicialCreate.cs</td>
+    <td>A migration em si (476 linhas). Método <code>Up()</code> = <b>10 <code>CreateTable</code></b>, <b>21 <code>CreateIndex</code></b> e <b>1 <code>InsertData</code></b> (a configuração padrão). Método <code>Down()</code> = como desfazer tudo isso. O número no nome é a data/hora (2026-08-28 12:55:00) — é o que define a <b>ordem</b> de aplicação.</td>
+  </tr>
+  <tr>
+    <td class="mono">20260828125500_InicialCreate<br>.Designer.cs</td>
+    <td>Metadados dessa migration: uma cópia do modelo no momento em que ela foi criada. Usado internamente pelo EF. <b>Não editar.</b></td>
+  </tr>
+  <tr>
+    <td class="mono">PokeDraftDbContextModelSnapshot.cs</td>
+    <td>A "foto" do <b>estado atual</b> do modelo. Quando você roda <code>migrations add</code>, o EF compara suas classes com este snapshot para descobrir o que mudou e gerar só a diferença. <b>Não editar</b> — e cuidado: é o arquivo que mais dá conflito no Git quando duas pessoas criam migration ao mesmo tempo.</td>
+  </tr>
+</table>
+<div class="callout warn">
+  <b>Regra de ouro das migrations em equipe:</b> avise no grupo antes de criar uma migration.
+  Se duas pessoas criarem migrations em paralelo, o <code>ModelSnapshot</code> conflita. A solução
+  é a segunda pessoa dar <code>git pull</code>, apagar a sua migration
+  (<code>dotnet ef migrations remove</code>) e recriá-la em cima da versão do colega.
+</div>
+
+<h3 class="page-break">4.7 Views — as telas</h3>
+<p>
+  Views são arquivos <code>.cshtml</code>: HTML normal com blocos de C# marcados por <code>@</code>
+  (a sintaxe <b>Razor</b>). O servidor executa o C#, gera HTML puro e manda para o navegador.
+</p>
+<table>
+  <tr><th style="width:34%">Arquivo</th><th>Função</th></tr>
+  <tr><td class="mono">Views/_ViewStart.cshtml</td><td>Roda <b>antes</b> de cada view e define o layout padrão (<code>Layout = "_Layout"</code>). É por isso que nenhuma view precisa repetir isso.</td></tr>
+  <tr><td class="mono">Views/_ViewImports.cshtml</td><td>Os <code>@using</code> e <i>tag helpers</i> válidos em <b>todas</b> as views. Evita repetir imports em cada arquivo. Se você criar um namespace novo usado em muitas telas, adicione aqui.</td></tr>
+  <tr><td class="mono">Views/Shared/_Layout.cshtml</td><td>A <b>moldura</b> comum: <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, menu de navegação, rodapé, e os <code>&lt;link&gt;</code>/<code>&lt;script&gt;</code> do Bootstrap, do <code>site.css</code> e do <code>site.js</code>. No meio dela existe <code>@RenderBody()</code> — o buraco onde o conteúdo de cada página é encaixado. <b>Mudou aqui, mudou em todas as telas.</b></td></tr>
+  <tr><td class="mono">Views/Shared/_Layout.cshtml.css</td><td>CSS <i>com escopo</i>: vale só para o layout. O ASP.NET adiciona um identificador nos elementos para isolar esse estilo.</td></tr>
+  <tr><td class="mono">Views/Shared/Error.cshtml</td><td>Tela exibida quando estoura um erro não tratado. Recebe o <code>ErrorViewModel</code>.</td></tr>
+  <tr><td class="mono">Views/Shared/_ValidationScriptsPartial.cshtml</td><td>Bloco reutilizável com os scripts de validação de formulário no navegador. Uma view inclui com <code>@await Html.PartialAsync(...)</code>. O <code>_</code> no início do nome é a convenção para "arquivo parcial, não é uma página".</td></tr>
+  <tr><td class="mono">Views/Home/Index.cshtml</td><td>A home do PokéDraft. Hoje mostra título, descrição e o status da entrega.</td></tr>
+  <tr><td class="mono">Views/Home/Privacy.cshtml</td><td>Página de privacidade do template. Pode ser reaproveitada ou removida.</td></tr>
+</table>
+<div class="callout rule">
+  <b>A convenção de pastas:</b> <code>Views/&lt;NomeDoController&gt;/&lt;NomeDoMétodo&gt;.cshtml</code>.
+  Quando <code>PokemonController.Index()</code> chama <code>return View()</code>, o ASP.NET procura
+  automaticamente por <code>Views/Pokemon/Index.cshtml</code>. Se não achar, procura em <code>Views/Shared/</code>.
+</div>
+
+<h3>4.8 wwwroot — os arquivos públicos</h3>
+<table>
+  <tr><th style="width:30%">Arquivo/pasta</th><th>Função</th></tr>
+  <tr><td class="mono">wwwroot/css/site.css</td><td>O CSS do site. <b>É aqui que vai o visual do PokéDraft</b> (entrega de 23/10).</td></tr>
+  <tr><td class="mono">wwwroot/js/site.js</td><td>O JavaScript. Hoje está praticamente vazio — é aqui que entram as funções com <code>fetch()</code> que conversam com a nossa API.</td></tr>
+  <tr><td class="mono">wwwroot/favicon.ico</td><td>Ícone da aba do navegador.</td></tr>
+  <tr><td class="mono">wwwroot/lib/</td><td>Bibliotecas de terceiros que vieram com o template: <b>Bootstrap</b> (grid e componentes visuais prontos), <b>jQuery</b> e os plugins de validação. Não editamos nada aqui.</td></tr>
+</table>
+<div class="callout warn">
+  <b>Duas regras sobre o <code>wwwroot</code>:</b><br>
+  1. Só o que está aqui o navegador consegue baixar diretamente. CSS/JS colocado em outra pasta simplesmente não carrega.<br>
+  2. Tudo aqui é <b>público</b>. Nunca coloque nada sensível — qualquer pessoa pode acessar digitando a URL.
+</div>
+
+<!-- ============ 5. BANCO ============ -->
+<h2 class="page-break">5. O banco de dados</h2>
+
+<h3>5.1 Diagrama de relacionamentos</h3>
+<div class="ascii">  ┌──────────────────────────────────────────────────────────────┐
+  │  CATÁLOGO — cadastrado uma vez, vale para todas as partidas  │
+  │                                                              │
+  │     Pokemon   ·   Item   ·   Jogador   ·   Configuracao      │
+  └──────────────────────────────────────────────────────────────┘
+                                  │
+                                  │  são referenciados por…
+                                  ▼
+  ┌──────────────────────────────────────────────────────────────┐
+  │                          PARTIDA                             │
+  │     a entidade central: aponta para Configuracao (regras),   │
+  │     Jogador A, Jogador B e Jogador Vencedor                  │
+  └──────────────────────────────────────────────────────────────┘
+                                  │
+                                  │  …e tudo abaixo pertence a UMA partida
+                                  ▼
+
+     PokemonNoPool ....... o sorteio dos Pokémon  →  Pokemon
+     ItemNoPool .......... o sorteio dos itens    →  Item
+     EscolhaPokemon ...... o time montado         →  Pokemon + Item + Jogador
+     MovimentacaoDraft ... o histórico de ações   →  Jogador (+ Pokemon / Item)
+     ConfrontoBatalha .... os duelos 1×1          →  EscolhaPokemon (A e B)</div>
+<p>Lendo o diagrama:</p>
+<ul>
+  <li><b>Catálogo</b> (Pokemon, Item, Jogador, Configuracao): dados que existem independentemente de qualquer partida. Preenchidos uma vez (importador da PokéAPI, cadastro de jogadores).</li>
+  <li><b>Partida</b> é o centro. Tudo que acontece durante o jogo pertence a uma partida.</li>
+  <li>As tabelas de jogo <b>ligam</b> o catálogo à partida: <code>PokemonNoPool</code> diz "este Pokémon do catálogo está no pool desta partida"; <code>EscolhaPokemon</code> diz "este Pokémon do catálogo está no time deste jogador nesta partida".</li>
+  <li><code>ConfrontoBatalha</code> aponta para <code>EscolhaPokemon</code> (e não para <code>Pokemon</code>) porque o que luta é o Pokémon <b>já montado</b>, com item e IVs.</li>
+</ul>
+
+<h3>5.2 As tabelas, coluna por coluna</h3>
+<p class="muted">Tipos SQLite: <code>INTEGER</code> (números e booleanos), <code>TEXT</code> (textos, datas e enums), <code>REAL</code> (decimais). Toda tabela tem <code>Id INTEGER</code> como chave primária autoincremental.</p>
+
+<h4>Pokemons</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK, autoincremento</td></tr>
+  <tr><td class="mono">PokeApiId</td><td>INTEGER</td><td>não</td><td><b>índice único</b></td></tr>
+  <tr><td class="mono">Nome</td><td>TEXT(60)</td><td>não</td><td></td></tr>
+  <tr><td class="mono">Tipo1</td><td>TEXT(20)</td><td>não</td><td>enum como texto: "Fogo", "Agua"...</td></tr>
+  <tr><td class="mono">Tipo2</td><td>TEXT(20)</td><td>sim</td><td>nulo = tipagem simples</td></tr>
+  <tr><td class="mono">HpBase, AtaqueBase, DefesaBase,<br>AtaqueEspecialBase, DefesaEspecialBase,<br>VelocidadeBase</td><td>INTEGER</td><td>não</td><td>os seis status base</td></tr>
+  <tr><td class="mono">TotalStatusBase</td><td>INTEGER</td><td>não</td><td>soma pré-calculada</td></tr>
+  <tr><td class="mono">Geracao</td><td>INTEGER</td><td>não</td><td></td></tr>
+  <tr><td class="mono">SpriteUrl</td><td>TEXT(300)</td><td>sim</td><td></td></tr>
+  <tr><td class="mono">Custo</td><td>INTEGER</td><td>não</td><td>preço em pontos</td></tr>
+</table>
+
+<h4>Itens</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">Nome</td><td>TEXT(80)</td><td>não</td><td></td></tr>
+  <tr><td class="mono">Descricao</td><td>TEXT(400)</td><td>sim</td><td></td></tr>
+  <tr><td class="mono">Categoria</td><td>TEXT(60)</td><td>sim</td><td></td></tr>
+  <tr><td class="mono">BonusOverall</td><td>INTEGER</td><td>não</td><td>soma ao overall do portador</td></tr>
+  <tr><td class="mono">SpriteUrl</td><td>TEXT(300)</td><td>sim</td><td></td></tr>
+  <tr><td class="mono">Custo</td><td>INTEGER</td><td>não</td><td></td></tr>
+</table>
+
+<h4>Jogadores</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">Nome</td><td>TEXT(60)</td><td>não</td><td></td></tr>
+  <tr><td class="mono">CriadoEm</td><td>TEXT</td><td>não</td><td>data/hora ISO</td></tr>
+</table>
+
+<h4>Configuracoes</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">Nome</td><td>TEXT(80)</td><td>não</td><td><b>índice único</b></td></tr>
+  <tr><td class="mono">BudgetPontos</td><td>INTEGER</td><td>não</td><td>padrão 100</td></tr>
+  <tr><td class="mono">QuantidadeSamples</td><td>INTEGER</td><td>não</td><td>padrão 5</td></tr>
+  <tr><td class="mono">PokemonPorSample</td><td>INTEGER</td><td>não</td><td>padrão 6</td></tr>
+  <tr><td class="mono">TamanhoTime</td><td>INTEGER</td><td>não</td><td>padrão 6</td></tr>
+  <tr><td class="mono">BansPorJogador</td><td>INTEGER</td><td>não</td><td>padrão 2</td></tr>
+  <tr><td class="mono">FatorVenda</td><td>REAL</td><td>não</td><td>padrão 0.5</td></tr>
+  <tr><td class="mono">CriadaEm</td><td>TEXT</td><td>não</td><td></td></tr>
+</table>
+
+<h4>Partidas</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">Nome</td><td>TEXT(100)</td><td>sim</td><td></td></tr>
+  <tr><td class="mono">Status</td><td>TEXT(20)</td><td>não</td><td>"Configuracao" / "Draft" / "Batalha" / "Finalizada"</td></tr>
+  <tr><td class="mono">CriadaEm</td><td>TEXT</td><td>não</td><td></td></tr>
+  <tr><td class="mono">FinalizadaEm</td><td>TEXT</td><td>sim</td><td>nulo até a batalha acabar</td></tr>
+  <tr><td class="mono">ConfiguracaoId</td><td>INTEGER</td><td>não</td><td>FK → Configuracoes</td></tr>
+  <tr><td class="mono">JogadorAId</td><td>INTEGER</td><td>não</td><td>FK → Jogadores</td></tr>
+  <tr><td class="mono">JogadorBId</td><td>INTEGER</td><td>não</td><td>FK → Jogadores</td></tr>
+  <tr><td class="mono">VencedorJogadorId</td><td>INTEGER</td><td>sim</td><td>FK → Jogadores</td></tr>
+  <tr><td class="mono">PontosJogadorA</td><td>INTEGER</td><td>não</td><td>placar</td></tr>
+  <tr><td class="mono">PontosJogadorB</td><td>INTEGER</td><td>não</td><td>placar</td></tr>
+</table>
+
+<h4>PokemonNoPool</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">PartidaId</td><td>INTEGER</td><td>não</td><td>FK → Partidas</td></tr>
+  <tr><td class="mono">PokemonId</td><td>INTEGER</td><td>não</td><td>FK → Pokemons</td></tr>
+  <tr><td class="mono">NumeroSample</td><td>INTEGER</td><td>não</td><td>índice composto com PartidaId</td></tr>
+  <tr><td class="mono">Banido</td><td>INTEGER</td><td>não</td><td>0 = false, 1 = true</td></tr>
+  <tr><td class="mono">BanidoPorJogadorId</td><td>INTEGER</td><td>sim</td><td>marcador (sem FK)</td></tr>
+  <tr><td class="mono">CompradoPorJogadorId</td><td>INTEGER</td><td>sim</td><td>nulo = disponível</td></tr>
+</table>
+
+<h4>ItensNoPool</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">PartidaId</td><td>INTEGER</td><td>não</td><td>FK → Partidas</td></tr>
+  <tr><td class="mono">ItemId</td><td>INTEGER</td><td>não</td><td>FK → Itens</td></tr>
+  <tr><td class="mono">AdquiridoPorJogadorId</td><td>INTEGER</td><td>sim</td><td>nulo = disponível</td></tr>
+</table>
+
+<h4>EscolhasPokemon</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">PartidaId</td><td>INTEGER</td><td>não</td><td>FK → Partidas</td></tr>
+  <tr><td class="mono">JogadorId</td><td>INTEGER</td><td>não</td><td>FK → Jogadores</td></tr>
+  <tr><td class="mono">PokemonId</td><td>INTEGER</td><td>não</td><td>FK → Pokemons</td></tr>
+  <tr><td class="mono">ItemId</td><td>INTEGER</td><td>sim</td><td>FK → Itens (item equipado)</td></tr>
+  <tr><td class="mono">PontosGastos</td><td>INTEGER</td><td>não</td><td>custo no momento da compra</td></tr>
+  <tr><td class="mono">OrdemNaBatalha</td><td>INTEGER</td><td>sim</td><td>1, 2, 3... nulo antes de ordenar</td></tr>
+  <tr><td class="mono">Natureza</td><td>TEXT(20)</td><td>sim</td><td>sorteada</td></tr>
+  <tr><td class="mono">IvHp, IvAtaque, IvDefesa,<br>IvAtaqueEspecial, IvDefesaEspecial,<br>IvVelocidade</td><td>INTEGER</td><td>não</td><td>0 a 31 cada</td></tr>
+  <tr><td class="mono">OverallBase</td><td>INTEGER</td><td>não</td><td>calculado no fim do draft</td></tr>
+  <tr><td class="mono">Vendida</td><td>INTEGER</td><td>não</td><td>registro preservado, não apagado</td></tr>
+  <tr><td class="mono">PontosRecebidosNaVenda</td><td>INTEGER</td><td>sim</td><td></td></tr>
+</table>
+
+<h4>MovimentacoesDraft</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">PartidaId</td><td>INTEGER</td><td>não</td><td>FK → Partidas</td></tr>
+  <tr><td class="mono">JogadorId</td><td>INTEGER</td><td>não</td><td>FK → Jogadores</td></tr>
+  <tr><td class="mono">Tipo</td><td>TEXT(20)</td><td>não</td><td>"Banimento", "CompraPokemon"...</td></tr>
+  <tr><td class="mono">PokemonId</td><td>INTEGER</td><td>sim</td><td>FK → Pokemons</td></tr>
+  <tr><td class="mono">ItemId</td><td>INTEGER</td><td>sim</td><td>FK → Itens</td></tr>
+  <tr><td class="mono">VariacaoPontos</td><td>INTEGER</td><td>não</td><td>negativo/positivo/zero</td></tr>
+  <tr><td class="mono">SaldoResultante</td><td>INTEGER</td><td>não</td><td>saldo após a ação</td></tr>
+  <tr><td class="mono">Descricao</td><td>TEXT(200)</td><td>sim</td><td>texto para exibir</td></tr>
+  <tr><td class="mono">Momento</td><td>TEXT</td><td>não</td><td>ordem cronológica</td></tr>
+</table>
+
+<h4>ConfrontosBatalha</h4>
+<table>
+  <tr><th style="width:30%">Coluna</th><th style="width:16%">Tipo</th><th style="width:10%">Nulo?</th><th>Observação</th></tr>
+  <tr><td class="mono">Id</td><td>INTEGER</td><td>não</td><td>PK</td></tr>
+  <tr><td class="mono">PartidaId</td><td>INTEGER</td><td>não</td><td>FK → Partidas</td></tr>
+  <tr><td class="mono">Ordem</td><td>INTEGER</td><td>não</td><td>posição do duelo</td></tr>
+  <tr><td class="mono">EscolhaPokemonAId</td><td>INTEGER</td><td>não</td><td>FK → EscolhasPokemon</td></tr>
+  <tr><td class="mono">EscolhaPokemonBId</td><td>INTEGER</td><td>não</td><td>FK → EscolhasPokemon</td></tr>
+  <tr><td class="mono">OverallA</td><td>INTEGER</td><td>não</td><td>overall final do lado A</td></tr>
+  <tr><td class="mono">OverallB</td><td>INTEGER</td><td>não</td><td>overall final do lado B</td></tr>
+  <tr><td class="mono">VencedorJogadorId</td><td>INTEGER</td><td>sim</td><td>nulo = empate no duelo</td></tr>
+</table>
+
+<h4>__EFMigrationsHistory</h4>
+<p>Tabela criada e usada <b>pelo próprio EF Core</b>. Guarda quais migrations já foram aplicadas neste banco. É como o EF sabe, ao rodar <code>database update</code>, que só precisa aplicar as novas. Nunca edite.</p>
+
+<h3 class="page-break">5.3 Índices</h3>
+<p>Um índice acelera buscas por uma coluna, ao custo de um pouco de espaço. Temos <b>21</b> no total:</p>
+<table>
+  <tr><th style="width:38%">Índice</th><th style="width:16%">Tipo</th><th>Motivo</th></tr>
+  <tr><td class="mono">Pokemons.PokeApiId</td><td><b>único</b></td><td>Garante que o importador não cadastre o mesmo Pokémon duas vezes, mesmo se rodar duas vezes.</td></tr>
+  <tr><td class="mono">Configuracoes.Nome</td><td><b>único</b></td><td>Não deixa criar dois presets com o mesmo nome.</td></tr>
+  <tr><td class="mono">PokemonNoPool<br>(PartidaId, NumeroSample)</td><td>composto</td><td>A consulta mais frequente da tela do draft é "me dá o sample N da partida X". Este índice torna isso instantâneo.</td></tr>
+  <tr><td class="mono">demais (18)</td><td>automáticos</td><td>O EF cria um índice para <b>cada chave estrangeira</b>. Sem eles, buscar "todas as escolhas da partida 5" varreria a tabela inteira.</td></tr>
+</table>
+
+<h3>5.4 Regras de exclusão (o que acontece ao apagar)</h3>
+<p>Quando você apaga um registro, o que acontece com quem apontava para ele? Definimos isso explicitamente:</p>
+<table>
+  <tr><th style="width:36%">Relacionamento</th><th style="width:16%">Comportamento</th><th>Efeito prático</th></tr>
+  <tr><td>Partida → PokemonNoPool, ItensNoPool,<br>EscolhasPokemon, MovimentacoesDraft,<br>ConfrontosBatalha</td><td><b>Cascade</b></td><td>Apagar uma partida apaga <b>tudo que pertence a ela</b>. Faz sentido: pool, time e histórico não existem fora da partida.</td></tr>
+  <tr><td>Pokemon / Item / Jogador /<br>Configuracao → qualquer coisa</td><td><b>Restrict</b></td><td>O banco <b>impede</b> apagar um Pokémon, item, jogador ou configuração que esteja sendo usado em alguma partida. Evita deixar registros órfãos e apagar histórico sem querer.</td></tr>
+  <tr><td>EscolhaPokemon → Item (equipado)</td><td><b>SetNull</b></td><td>Se um item for removido do catálogo, o Pokémon que o carregava simplesmente fica <b>sem item</b> — em vez de bloquear a exclusão ou apagar o Pokémon do time.</td></tr>
+  <tr><td>EscolhaPokemon → ConfrontoBatalha</td><td><b>Restrict</b></td><td>Não dá para apagar uma escolha que já participou de um confronto registrado.</td></tr>
+</table>
+<div class="callout">
+  <b>Por que não deixar tudo em Cascade?</b> Além de perigoso (um <code>DELETE</code> errado apagaria
+  meia base), o EF/SQL não permite <b>múltiplos caminhos de cascata</b> chegando na mesma tabela.
+  Como <code>EscolhaPokemon</code> depende tanto de <code>Partida</code> quanto de <code>Jogador</code>,
+  se os dois fossem Cascade daria erro ao criar o banco. Escolhemos: Partida cascateia, os demais restringem.
+</div>
+
+<h3>5.5 Dado inicial (seed)</h3>
+<p>A migration já insere uma <code>Configuracao</code> pronta, para que dê para criar uma partida sem cadastrar nada antes:</p>
+<table>
+  <tr><th style="width:36%">Campo</th><th>Valor</th></tr>
+  <tr><td class="mono">Id / Nome</td><td>1 / "Padrão"</td></tr>
+  <tr><td class="mono">BudgetPontos</td><td>100</td></tr>
+  <tr><td class="mono">QuantidadeSamples × PokemonPorSample</td><td>5 × 6 = 30 Pokémon no pool</td></tr>
+  <tr><td class="mono">TamanhoTime</td><td>6</td></tr>
+  <tr><td class="mono">BansPorJogador</td><td>2</td></tr>
+  <tr><td class="mono">FatorVenda</td><td>0.5 (recupera metade)</td></tr>
+</table>
+<p class="muted">Esses valores são um <b>ponto de partida</b> para balancear. Depois de testar o draft, provavelmente vamos ajustar budget e custos.</p>
+
+<!-- ============ 6. CONCEITOS ============ -->
+<h2 class="page-break">6. Conceitos de C# e EF Core que aparecem no código</h2>
+<p>Tudo aqui está no código que já existe. Se algum trecho parecer estranho ao abrir um arquivo, provavelmente a explicação está nesta seção.</p>
+
+<h3>6.1 Propriedades com <code>get; set;</code></h3>
+<pre>public string Nome { get; set; } = null!;</pre>
+<p>Uma <b>propriedade</b> é um campo com controle de leitura (<code>get</code>) e escrita (<code>set</code>). O EF Core só transforma em coluna aquilo que for propriedade pública com <code>get</code> e <code>set</code> — por isso todas as entidades usam esse formato.</p>
+
+<h3>6.2 Nulos: <code>?</code> e <code>= null!</code></h3>
+<p>Como o projeto tem <code>&lt;Nullable&gt;enable&lt;/&gt;</code>, o compilador diferencia o que pode ou não ser nulo:</p>
+<table>
+  <tr><th style="width:30%">Escrita</th><th>Significado</th></tr>
+  <tr><td class="mono">string Nome</td><td><b>Obrigatório.</b> No banco vira coluna <code>NOT NULL</code>.</td></tr>
+  <tr><td class="mono">string? Descricao</td><td><b>Opcional.</b> Pode ser nulo; coluna aceita <code>NULL</code>.</td></tr>
+  <tr><td class="mono">int? OrdemNaBatalha</td><td>Número que <b>pode não ter valor ainda</b>. Diferente de zero: <code>null</code> = "não definido", <code>0</code> = "definido como zero".</td></tr>
+  <tr><td class="mono">= null!</td><td>Uma promessa ao compilador: "sei que parece nulo agora, mas o EF preenche antes de qualquer uso". Serve só para silenciar o aviso — não muda o banco.</td></tr>
+</table>
+
+<h3>6.3 Propriedades de navegação e <code>ICollection</code></h3>
+<pre>public int PartidaId { get; set; }              <span class="cm">// vira coluna (a FK)</span>
+public Partida Partida { get; set; } = null!;   <span class="cm">// navegação: NÃO vira coluna</span>
+
+public ICollection&lt;EscolhaPokemon&gt; Escolhas { get; set; } = new List&lt;EscolhaPokemon&gt;();</pre>
+<p>O par <code>PartidaId</code> + <code>Partida</code> é a convenção do EF: o <code>int</code> é a chave estrangeira real; o objeto é o atalho para navegar no C#. A coleção é o lado "muitos" do relacionamento — permite escrever <code>partida.Escolhas</code> em vez de fazer outra consulta.</p>
+<p>Para a navegação vir preenchida do banco, é preciso pedir com <code>Include</code>:</p>
+<pre>var partida = _context.Partidas
+    .Include(p =&gt; p.Escolhas)
+        .ThenInclude(e =&gt; e.Pokemon)
+    .FirstOrDefault(p =&gt; p.Id == id);</pre>
+<p class="muted">Sem o <code>Include</code>, <code>partida.Escolhas</code> vem vazia — não é bug, é o EF evitando carregar dados que você não pediu.</p>
+
+<h3>6.4 Enums e <code>HasConversion&lt;string&gt;()</code></h3>
+<p>Por padrão o EF guardaria <code>StatusPartida.Draft</code> como o número <code>2</code>. Configuramos para guardar o texto <code>"Draft"</code>:</p>
+<pre>modelBuilder.Entity&lt;Partida&gt;()
+    .Property(p =&gt; p.Status).HasConversion&lt;string&gt;().HasMaxLength(20);</pre>
+<p>Custa alguns bytes a mais, mas quem abrir o banco lê <code>"Finalizada"</code> em vez de decifrar <code>4</code>. Para um projeto de estudo, vale muito.</p>
+
+<h3>6.5 Data Annotations vs Fluent API</h3>
+<p>Duas formas de configurar o mapeamento. Usamos as duas:</p>
+<table>
+  <tr><th style="width:26%">Forma</th><th style="width:34%">Onde</th><th>Usamos para</th></tr>
+  <tr><td><b>Data Annotation</b></td><td>Atributo em cima da propriedade, na entidade: <code>[MaxLength(60)]</code></td><td>Coisas simples e locais: tamanho máximo de texto.</td></tr>
+  <tr><td><b>Fluent API</b></td><td>Método <code>OnModelCreating</code>, no DbContext</td><td>Coisas que envolvem mais de uma entidade: relacionamentos, comportamento de exclusão, índices compostos, conversões, seed.</td></tr>
+</table>
+
+<h3>6.6 Injeção de dependência</h3>
+<pre>public class PokemonController : ControllerBase
+{
+    private readonly PokeDraftDbContext _context;
+
+    public PokemonController(PokeDraftDbContext context)   <span class="cm">// chega pronto</span>
+    {
+        _context = context;
+    }
+}</pre>
+<p>Você <b>nunca</b> escreve <code>new PokeDraftDbContext(...)</code> num controller. Como o <code>Program.cs</code> registrou o DbContext com <code>AddDbContext</code>, o ASP.NET cria e entrega a instância no construtor automaticamente — e cuida de fechar a conexão no fim da requisição. Mesmo padrão do <code>ILogger</code> no <code>HomeController</code>.</p>
+
+<h3>6.7 LINQ — consultando o banco</h3>
+<pre>var disponiveis = _context.PokemonNoPool
+    .Where(p =&gt; p.PartidaId == partidaId
+             && !p.Banido
+             && p.CompradoPorJogadorId == null)
+    .Include(p =&gt; p.Pokemon)
+    .OrderBy(p =&gt; p.NumeroSample)
+    .ToList();</pre>
+<p>O EF traduz isso em <code>SELECT ... WHERE ... ORDER BY</code>. A consulta só é executada quando você chama <code>ToList()</code>, <code>FirstOrDefault()</code> ou similar.</p>
+<table>
+  <tr><th style="width:30%">Método</th><th>O que faz</th></tr>
+  <tr><td class="mono">.Where(...)</td><td>Filtra (vira <code>WHERE</code>).</td></tr>
+  <tr><td class="mono">.OrderBy / .OrderByDescending</td><td>Ordena.</td></tr>
+  <tr><td class="mono">.Include(...)</td><td>Traz junto os dados relacionados.</td></tr>
+  <tr><td class="mono">.FirstOrDefault(...)</td><td>Pega o primeiro ou <code>null</code> se não achar.</td></tr>
+  <tr><td class="mono">.Any(...) / .Count(...)</td><td>Existe algum? Quantos?</td></tr>
+  <tr><td class="mono">.ToList()</td><td>Executa e traz os resultados.</td></tr>
+</table>
+
+<h3>6.8 Gravando: <code>SaveChanges</code></h3>
+<pre>_context.Jogadores.Add(novoJogador);
+_context.SaveChanges();     <span class="cm">// só aqui o banco é realmente alterado</span></pre>
+<p>O DbContext <b>acumula</b> as mudanças em memória e grava tudo de uma vez no <code>SaveChanges()</code>, dentro de uma transação. Se der erro no meio, nada é gravado — importante para operações como "comprar Pokémon", que mexem em três tabelas ao mesmo tempo.</p>
+
+<h3>6.9 <code>async</code> / <code>await</code></h3>
+<pre>public async Task&lt;IActionResult&gt; Listar()
+{
+    var lista = await _context.Pokemons.ToListAsync();
+    return Ok(lista);
+}</pre>
+<p>Versões assíncronas liberam a <i>thread</i> enquanto o banco responde, permitindo o servidor atender mais requisições. Regra: se o método tem <code>await</code>, ele precisa ser <code>async</code> e devolver <code>Task&lt;...&gt;</code>. Vamos usar <code>async</code> nos controllers de API e no importador da PokéAPI.</p>
+
+<!-- ============ 7. RECEITA ============ -->
+<h2 class="page-break">7. Receita: criando uma funcionalidade do zero</h2>
+<p>
+  Exemplo real e completo: <b>CRUD de Jogador</b> (parte da entrega de 11/09). Os mesmos seis
+  passos servem para qualquer entidade.
+</p>
+
+<h3>Passo 1 — A entidade já existe? </h3>
+<p><code>Models/Entities/Jogador.cs</code> já existe e já está no <code>DbContext</code> como <code>DbSet&lt;Jogador&gt; Jogadores</code>. Se fosse uma entidade nova, seria preciso criar a classe, adicionar o <code>DbSet</code> e gerar uma migration:</p>
+<pre>dotnet ef migrations add AdicionaEntidadeX --project PokeDraft.Web
+dotnet ef database update --project PokeDraft.Web</pre>
+
+<h3>Passo 2 — O Controller de API</h3>
+<p>Criar <code>Controllers/JogadorController.cs</code>:</p>
+<pre>using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PokeDraft.Web.Data;
+using PokeDraft.Web.Models.Entities;
+
+namespace PokeDraft.Web.Controllers;
+
+[ApiController]                        <span class="cm">// marca como controller de API</span>
+[Route("api/[controller]")]            <span class="cm">// rota base: /api/jogador</span>
+public class JogadorController : ControllerBase
+{
+    private readonly PokeDraftDbContext _context;
+
+    public JogadorController(PokeDraftDbContext context) =&gt; _context = context;
+
+    [HttpGet]                                          <span class="cm">// GET /api/jogador</span>
+    public async Task&lt;IActionResult&gt; Listar()
+        =&gt; Ok(await _context.Jogadores.OrderBy(j =&gt; j.Nome).ToListAsync());
+
+    [HttpGet("{id}")]                                  <span class="cm">// GET /api/jogador/3</span>
+    public async Task&lt;IActionResult&gt; Obter(int id)
+    {
+        var jogador = await _context.Jogadores.FindAsync(id);
+        if (jogador is null) return NotFound();
+        return Ok(jogador);
+    }
+
+    [HttpPost]                                         <span class="cm">// POST /api/jogador</span>
+    public async Task&lt;IActionResult&gt; Criar(Jogador jogador)
+    {
+        if (string.IsNullOrWhiteSpace(jogador.Nome))
+            return BadRequest("O nome é obrigatório.");
+
+        _context.Jogadores.Add(jogador);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(Obter), new { id = jogador.Id }, jogador);
+    }
+
+    [HttpPut("{id}")]                                  <span class="cm">// PUT /api/jogador/3</span>
+    public async Task&lt;IActionResult&gt; Atualizar(int id, Jogador dados)
+    {
+        var jogador = await _context.Jogadores.FindAsync(id);
+        if (jogador is null) return NotFound();
+
+        jogador.Nome = dados.Nome;
+        await _context.SaveChangesAsync();
+        return Ok(jogador);
+    }
+
+    [HttpDelete("{id}")]                               <span class="cm">// DELETE /api/jogador/3</span>
+    public async Task&lt;IActionResult&gt; Remover(int id)
+    {
+        var jogador = await _context.Jogadores.FindAsync(id);
+        if (jogador is null) return NotFound();
+
+        _context.Jogadores.Remove(jogador);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+}</pre>
+<table>
+  <tr><th style="width:26%">Retorno</th><th>Código HTTP e quando usar</th></tr>
+  <tr><td class="mono">Ok(dados)</td><td>200 — deu certo, aqui está o resultado.</td></tr>
+  <tr><td class="mono">CreatedAtAction(...)</td><td>201 — criado com sucesso.</td></tr>
+  <tr><td class="mono">NoContent()</td><td>204 — deu certo, não há nada para devolver (típico do DELETE).</td></tr>
+  <tr><td class="mono">BadRequest("msg")</td><td>400 — o cliente mandou algo inválido.</td></tr>
+  <tr><td class="mono">NotFound()</td><td>404 — o id não existe.</td></tr>
+</table>
+
+<h3>Passo 3 — O Controller de tela (MVC)</h3>
+<p>Um controller separado, só para entregar a página. Criar <code>Controllers/JogadoresController.cs</code>:</p>
+<pre>public class JogadoresController : Controller
+{
+    public IActionResult Index() =&gt; View();   <span class="cm">// devolve Views/Jogadores/Index.cshtml</span>
+}</pre>
+<div class="callout">
+  <b>Por que dois controllers?</b> Um herda de <code>ControllerBase</code> e devolve <b>JSON</b>
+  (a API, em <code>/api/jogador</code>); o outro herda de <code>Controller</code> e devolve <b>HTML</b>
+  (a tela, em <code>/Jogadores</code>). Separar deixa claro o papel de cada um e evita confusão de rotas.
+</div>
+
+<h3>Passo 4 — A View</h3>
+<p>Criar <code>Views/Jogadores/Index.cshtml</code>:</p>
+<pre>@{
+    ViewData["Title"] = "Jogadores";
+}
+
+&lt;h1&gt;Jogadores&lt;/h1&gt;
+
+&lt;input id="nome" placeholder="Nome do jogador" /&gt;
+&lt;button onclick="criarJogador()"&gt;Adicionar&lt;/button&gt;
+
+&lt;ul id="lista"&gt;&lt;/ul&gt;
+
+@section Scripts {
+    &lt;script src="~/js/jogadores.js"&gt;&lt;/script&gt;
+}</pre>
+
+<h3>Passo 5 — O JavaScript</h3>
+<p>Criar <code>wwwroot/js/jogadores.js</code>:</p>
+<pre>async function carregarJogadores() {
+    const resposta = await fetch("/api/jogador");
+    if (!resposta.ok) {                        <span class="cm">// sempre trate o erro</span>
+        alert("Erro ao carregar jogadores.");
+        return;
+    }
+    const jogadores = await resposta.json();
+
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+    jogadores.forEach(j =&gt; {
+        lista.innerHTML += `&lt;li&gt;${j.nome}
+            &lt;button onclick="removerJogador(${j.id})"&gt;x&lt;/button&gt;&lt;/li&gt;`;
+    });
+}
+
+async function criarJogador() {
+    const nome = document.getElementById("nome").value;
+
+    const resposta = await fetch("/api/jogador", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },   <span class="cm">// obrigatório!</span>
+        body: JSON.stringify({ nome })
+    });
+
+    if (!resposta.ok) { alert("Não foi possível criar."); return; }
+
+    document.getElementById("nome").value = "";
+    carregarJogadores();                        <span class="cm">// atualiza a lista</span>
+}
+
+async function removerJogador(id) {
+    await fetch(`/api/jogador/${id}`, { method: "DELETE" });
+    carregarJogadores();
+}
+
+carregarJogadores();                            <span class="cm">// roda ao abrir a página</span></pre>
+<div class="callout warn">
+  <b>Atenção ao nome dos campos no JSON.</b> No C# a propriedade é <code>Nome</code> (maiúscula),
+  mas o ASP.NET converte para <code>nome</code> (minúscula) no JSON por padrão. No JavaScript use
+  <code>j.nome</code>, não <code>j.Nome</code>.
+</div>
+
+<h3>Passo 6 — Testar e commitar</h3>
+<ol>
+  <li><code>dotnet build</code> — tem que passar sem erro.</li>
+  <li><code>dotnet run --project PokeDraft.Web</code> e abrir <code>/Jogadores</code>.</li>
+  <li>Testar os quatro verbos: listar, criar, atualizar, remover.</li>
+  <li>Abrir o console do navegador (F12) e conferir se não há erro vermelho.</li>
+  <li><code>git add</code>, <code>git commit</code>, <code>git push</code> e abrir o Pull Request.</li>
+</ol>
+
+<!-- ============ 8. CONVENÇÕES ============ -->
+<h2 class="page-break">8. Convenções do time</h2>
+<p>Combinar isso agora evita retrabalho e conflito depois.</p>
+<table>
+  <tr><th style="width:28%">Assunto</th><th>Convenção</th></tr>
+  <tr><td><b>Idioma do código</b></td><td><b>Português</b> para tudo que é do domínio (<code>Jogador</code>, <code>Partida</code>, <code>PontosGastos</code>). Termos técnicos que não têm tradução natural ficam em inglês (<code>Controller</code>, <code>Id</code>, <code>Overall</code>, <code>Sample</code>).</td></tr>
+  <tr><td><b>Classes e propriedades</b></td><td><code>PascalCase</code>: <code>EscolhaPokemon</code>, <code>OrdemNaBatalha</code>.</td></tr>
+  <tr><td><b>Variáveis locais</b></td><td><code>camelCase</code>: <code>var jogadorAtual = ...</code></td></tr>
+  <tr><td><b>Campos privados</b></td><td>Prefixo <code>_</code>: <code>private readonly PokeDraftDbContext _context;</code></td></tr>
+  <tr><td><b>Nome de controller</b></td><td>Sempre termina em <code>Controller</code>. API no plural do recurso em <code>api/[controller]</code>.</td></tr>
+  <tr><td><b>Nome de migration</b></td><td>Descreve a mudança, sem espaços: <code>AdicionaTabelaNatureza</code>, <code>AjustaCustoPokemon</code>.</td></tr>
+  <tr><td><b>Arquivos JS</b></td><td>Um arquivo por tela em <code>wwwroot/js/</code>: <code>jogadores.js</code>, <code>draft.js</code>.</td></tr>
+  <tr><td><b>Mensagem de commit</b></td><td>Verbo no infinitivo/passado + o que foi feito, em português. Ex.: <code>"Adiciona CRUD de Jogador na API"</code>. Nada de <code>"update"</code> ou <code>"correções"</code>.</td></tr>
+  <tr><td><b>Onde fica regra de negócio</b></td><td>No backend, nunca no JavaScript. Validação no JS é só conveniência — a checagem que vale é a do Controller.</td></tr>
+</table>
+
+<!-- ============ 9. GIT ============ -->
+<h2>9. Fluxo de trabalho: Git e Trello</h2>
+
+<h3>9.1 O ciclo de uma tarefa</h3>
+<div class="ascii"><b>1.</b> Pega um card no Trello e move para "Em desenvolvimento"
+<b>2.</b> git pull                                  <span class="c">← sempre comece atualizado</span>
+<b>3.</b> git checkout -b feat/nome-da-tarefa       <span class="c">← branch própria</span>
+<b>4.</b> ... programa ...
+<b>5.</b> dotnet build                              <span class="c">← tem que passar</span>
+<b>6.</b> git add .  &&  git commit -m "mensagem clara"
+<b>7.</b> git push -u origin feat/nome-da-tarefa
+<b>8.</b> Abre Pull Request no GitHub; um colega revisa e aprova
+<b>9.</b> Merge na main → move o card para "Concluído"
+</div>
+
+<h3>9.2 Regras combinadas</h3>
+<ul>
+  <li>A <code>main</code> tem que <b>sempre compilar e rodar</b>. Ninguém commita direto nela.</li>
+  <li>Uma tarefa = um branch = um Pull Request. Branches curtos evitam conflitos gigantes.</li>
+  <li>Prefixos de branch: <code>feat/</code> (funcionalidade nova), <code>fix/</code> (correção), <code>docs/</code> (documentação).</li>
+  <li>Deu <code>git pull</code> e veio migration nova? Rode <code>dotnet ef database update</code>.</li>
+  <li>Vai criar uma migration? <b>Avise no grupo antes</b> (ver o alerta na seção 4.6).</li>
+  <li>Nunca commite <code>bin/</code>, <code>obj/</code> ou <code>pokedraft.db</code> — o <code>.gitignore</code> já cuida disso.</li>
+</ul>
+
+<h3>9.3 Trello</h3>
+<p>O quadro tem um card por aula, com a entrega daquele dia na descrição. Listas: <b>BackLog</b> → <b>Em desenvolvimento</b> → <b>Concluído</b>. Sugestão: quebrar o card da aula em itens de checklist e marcar conforme cada um termina, para todo mundo ver o andamento.</p>
+
+<!-- ============ 10. CRONOGRAMA ============ -->
+<h2 class="page-break">10. Cronograma e divisão de tarefas</h2>
+<table>
+  <tr><th style="width:12%">Data</th><th style="width:42%">Entrega</th><th>Envolve mexer em</th></tr>
+  <tr><td><b>28/08</b> ✓</td><td>Ambiente, repositório, estrutura da solução, modelagem do banco + 1ª migration</td><td>Tudo criado. <span class="muted">Concluído.</span></td></tr>
+  <tr><td>04/09</td><td>Importador da PokéAPI funcionando + CRUD de Pokémon na API</td><td>Serviço de importação, <code>PokemonController</code></td></tr>
+  <tr><td>11/09</td><td>CRUD de Jogador, Partida e Configuração + esqueleto do frontend consumindo a API</td><td>3 controllers de API, Views, <code>wwwroot/js/</code></td></tr>
+  <tr><td><b>18/09</b></td><td><b>Marco: protótipo navegável.</b> Criação de partida e sorteio do pool</td><td><code>PartidaController</code>, lógica de sorteio, <code>PokemonNoPool</code>, <code>ItensNoPool</code></td></tr>
+  <tr><td>02/10</td><td>Motor do draft no backend: ban, compra, validações, controle de saldo</td><td><code>DraftController</code>, <code>EscolhaPokemon</code>, <code>MovimentacaoDraft</code></td></tr>
+  <tr><td>09/10</td><td>Venda + trava anti-beco-sem-saída + histórico de movimentações</td><td><code>DraftController</code>, <code>MovimentacaoDraft</code></td></tr>
+  <tr><td><b>16/10</b></td><td><b>Marco: MVP integrado.</b> Tela do draft completa ponta a ponta</td><td>Views, JS, CSS + integração</td></tr>
+  <tr><td>23/10</td><td>Polimento visual, sprites, feedback de erro, responsividade</td><td><code>site.css</code>, Views</td></tr>
+  <tr><td><b>30/10</b></td><td><b>Marco: versão candidata.</b> Testes, casos de borda, correção de bugs</td><td>Tudo</td></tr>
+  <tr><td>06/11</td><td>Congelamento do código, README, roteiro e ensaio da defesa</td><td>README, documentação</td></tr>
+</table>
+
+<h3>Sugestão de divisão entre os 4</h3>
+<table>
+  <tr><th style="width:22%">Frente</th><th>Responsabilidade</th></tr>
+  <tr><td><b>Dados</b></td><td>Importador da PokéAPI, catálogo de Pokémon e itens, definição dos custos e balanceamento.</td></tr>
+  <tr><td><b>Motor do draft</b></td><td>Sorteio dos pools, ban, compra, venda, controle de saldo, validações e histórico.</td></tr>
+  <tr><td><b>Batalha</b></td><td>Cálculo do overall, tabela de vantagem de tipagem, simulação dos confrontos e desempate.</td></tr>
+  <tr><td><b>Frontend</b></td><td>Telas, CSS, JavaScript de integração com a API, sprites, feedback de erro e responsividade.</td></tr>
+</table>
+<p class="muted">
+  As frentes se encontram nas datas de marco (18/09, 16/10, 30/10). Quem terminar antes ajuda a
+  próxima frente — e todo mundo revisa Pull Request de todo mundo.
+</p>
+
+<div class="callout rule" style="margin-top:16pt">
+  <b>Documento vivo.</b> Este manual descreve o estado do projeto na 1ª entrega. Sempre que a
+  estrutura mudar de forma relevante (nova entidade, nova pasta, nova convenção), atualize a seção
+  correspondente e gere uma versão nova. O fonte HTML está em <code>docs/</code> no repositório.
+</div>
+
+<p class="foot" style="margin-top:14pt">
+  PokéDraft · Manual Técnico v1.0 · Desenvolvimento de Software Visual · 2026<br>
+  github.com/eduardowoz/PokeDraft-DesenvolvimentoSoftwereVIsual · trello.com/b/oK9mxrKm
+</p>
+
+</body>
+</html>

@@ -1,8 +1,8 @@
 # PokéDraft
 
 Simulador de batalha Pokémon entre dois jogadores. Cada jogador monta o time
-através de um **draft** de Pokémon e itens (com orçamento em pontos, banimentos,
-compra e venda) e depois o sistema **simula a batalha** 1×1 entre os times.
+através de um **draft** de Pokémon e itens (com orçamento em pontos, compra e
+venda) e depois o sistema **simula a batalha** 1×1 entre os times.
 
 Projeto da disciplina **Desenvolvimento de Software Visual**.
 
@@ -10,108 +10,112 @@ Projeto da disciplina **Desenvolvimento de Software Visual**.
 
 | Camada | Tecnologia |
 |---|---|
-| Backend | C# / ASP.NET Core MVC (.NET 8) |
-| API | Controllers REST (CRUD) retornando JSON |
-| Banco de dados | SQLite + Entity Framework Core 8 |
+| Backend | C# / ASP.NET Core MVC (**.NET 10**) |
+| API | Controllers REST retornando JSON |
+| Banco de dados | SQLite + Entity Framework Core 10 |
 | Frontend | HTML + CSS + JavaScript (`fetch`), em `wwwroot/` |
 | Dados de Pokémon | Importados da [PokéAPI](https://pokeapi.co/) |
-| Versionamento | Git + GitHub |
-| Gestão | Trello (Kanban) |
+| Documentação da API | Scalar (`/scalar/v1`) |
 
-## Pré-requisitos (configuração do ambiente em cada máquina)
+## Pré-requisitos (em cada máquina)
 
-1. **.NET SDK 8.0** — https://dotnet.microsoft.com/download/dotnet/8.0
-   Teste: `dotnet --version` (deve mostrar `8.x`).
-   > O arquivo `global.json` trava o projeto no SDK 8, mesmo que a máquina
-   > também tenha versões mais novas instaladas.
-2. **Git** — https://git-scm.com/downloads
-3. **Visual Studio Code** — https://code.visualstudio.com/ com as extensões
+1. **.NET SDK 10.0** — https://dotnet.microsoft.com/download
+   Teste: `dotnet --version` (deve mostrar `10.x`).
+2. **Visual Studio Code** — https://code.visualstudio.com/ com as extensões
    **C#** e **C# Dev Kit**.
-4. **Ferramenta de linha de comando do EF Core** (uma vez por máquina):
+3. **Ferramenta de linha de comando do EF Core** (só quem for mexer em migration):
    ```bash
-   dotnet tool install --global dotnet-ef --version 8.*
+   dotnet tool install --global dotnet-ef --version 10.*
    ```
-   Teste: `dotnet ef --version`.
+   > Se você já tinha a versão 8 instalada, atualize:
+   > `dotnet tool update --global dotnet-ef --version 10.*`
+   > A versão do `dotnet-ef` precisa bater com a do EF Core do projeto.
 
-## Como rodar o projeto
+## Como rodar
 
 ```bash
-git clone https://github.com/eduardowoz/PokeDraft-DesenvolvimentoSoftwereVIsual.git
-cd PokeDraft-DesenvolvimentoSoftwereVIsual
 dotnet restore
-dotnet ef database update --project PokeDraft.Web   # cria o arquivo pokedraft.db
-dotnet run --project PokeDraft.Web
+dotnet run
 ```
 
-Abra no navegador o endereço mostrado no terminal (algo como `http://localhost:5xxx`).
+Abra no navegador o endereço que o **terminal imprimir** na linha `Now listening on:`.
+A porta vem de `Properties/launchSettings.json` e pode mudar — sempre confie no terminal,
+não em um número decorado. A documentação da API fica em `/scalar/v1`.
 
-> O banco (`pokedraft.db`) **não** é versionado — cada integrante gera o seu
-> localmente a partir das migrations. O que vai para o Git são os arquivos
-> em `PokeDraft.Web/Migrations/`.
+Para parar o servidor: `Ctrl+C` no terminal.
 
-## Estrutura da solução
+> O banco (`pokedraft.db`) **é versionado junto com o projeto**, já populado com
+> os 1025 Pokémon e os 36 itens. Não é preciso rodar migration para começar.
+
+## Estrutura
 
 ```
-PokeDraft.sln                  Solução (agrupa os projetos)
-global.json                    Trava o SDK em .NET 8
-PokeDraft.Web/                  Projeto web (backend + views + estáticos)
-  Program.cs                    Configuração da aplicação e do EF Core
-  appsettings.json              Connection string do SQLite
-  Controllers/                  Recebem as requisições (MVC + API)
-  Models/
-    Entities/                   Classes do domínio (viram tabelas)
-    Enums/                      Tipos fixos (status, tipo de Pokémon, etc.)
-  Data/
-    PokeDraftDbContext.cs       Ponte entre as classes e o banco
-  Migrations/                   Histórico de alterações do banco (versionado)
-  Views/                        HTML (.cshtml)
-  wwwroot/                      CSS, JS e imagens servidos ao navegador
+Pokedraft.sln                  Solução (abra esta no VS Code)
+Pokedraft.csproj               Projeto e pacotes NuGet
+Program.cs                     Configuração da aplicação, serviços e rotas
+appsettings.json               Configuração
+pokedraft.db                   Banco SQLite (versionado)
+Controllers/                   Endpoints da API e as páginas (HomeController)
+Data/AppDbContext.cs           Ponte entre as classes e o banco
+Migrations/                    Histórico de alterações do banco
+Models/
+  Entities/                    Classes do domínio (viram tabelas)
+  Requests/                    Objetos de entrada dos endpoints
+  Dto/                         Desserialização da PokéAPI
+Services/                      Regras de negócio (draft, itens, resultado)
+Views/Home/                    As telas (.cshtml)
+wwwroot/                       CSS, JS, sprites e bibliotecas
 ```
 
-## Modelo de dados (primeira versão)
+## Modelo de dados
 
 | Entidade | Papel |
 |---|---|
-| `Pokemon` | Catálogo de Pokémon (status base, tipos, custo) — vem da PokéAPI |
-| `Item` | Catálogo de itens de batalha (bônus de overall, custo) |
-| `Jogador` | Participante de partidas |
-| `Configuracao` | Preset de regras do draft (budget, tamanho do pool/time, fator de venda) |
-| `Partida` | Disputa entre dois jogadores; amarra tudo abaixo |
-| `PokemonNoPool` | Pokémon sorteados para os samples do draft de uma partida |
-| `ItemNoPool` | Itens disponíveis no sample de itens de uma partida |
-| `EscolhaPokemon` | Pokémon comprado por um jogador (item, natureza/IVs, ordem, venda) |
-| `MovimentacaoDraft` | Histórico de ban / compra / venda / equipar item |
-| `ConfrontoBatalha` | Cada duelo 1×1 da batalha simulada e seu resultado |
+| `Pokemon` | Catálogo de Pokémon (tipos, overall, custo) — vem da PokéAPI |
+| `Item` | Catálogo de itens (tipo, tier de overall, custo) |
+| `Jogador` | Participante, com o budget em pontos |
+| `Partida` | Disputa entre dois jogadores (budget, geração, turno) |
+| `Conexao` | Liga Partida + Jogador + Pokémon (+ Item equipado) — é o time montado |
 
-## Trabalhando em equipe (Git)
+## Telas e fluxo
 
-- `main` fica sempre funcionando. Ninguém faz commit direto nela.
-- Para cada tarefa: crie um branch (`git checkout -b feat/importador-pokeapi`),
-  faça os commits, suba (`git push -u origin <branch>`) e abra um Pull Request.
-- Rode `dotnet build` antes de commitar.
+1. **Index** — cadastro dos jogadores e criação da partida
+2. **Draft** — compra de Pokémon alternando o turno, gastando o budget
+3. **Itens** — compra e equipe de itens nos Pokémon do time
+4. **Batalha** — cada jogador escala os 6 Pokémon na ordem de combate
+5. **Resultado** — simulação 1×1, placar e vencedor
 
-### Migrations (quem mexer no modelo)
+### Como o overall é calculado
+
+```
+overall = Pokemon.Overall (soma dos base stats)
+        + IV sorteado        (0 a 310)
+        + natureza sorteada  (-100 a +100)
+        + bônus do item
+```
+
+O bônus do item usa `Item.Overall` como **tier**, e cada tier vale 10%:
+
+- itens **com tipo** (plates, tier 1, custo 10) → só valem se o tipo casar com o
+  `PrimeiroTipo` ou `SegundoTipo` do Pokémon;
+- itens **sem tipo** (Leftovers tier 2, Life Orb tier 3) → valem sempre.
+
+Na batalha, cada vitória de rodada vale 1 ponto. **Em caso de empate no placar**,
+vence quem tiver a maior média de overall do time.
+
+## Migrations
 
 ```bash
 # depois de alterar/adicionar classes em Models/Entities:
-dotnet ef migrations add DescricaoDaMudanca --project PokeDraft.Web
-dotnet ef database update --project PokeDraft.Web
+dotnet ef migrations add DescricaoDaMudanca
+dotnet ef database update
 ```
 
-Commite a pasta `Migrations/` junto com a mudança nas entidades. Os colegas só
-precisam rodar `dotnet ef database update` depois do `git pull`.
+Commite a pasta `Migrations/` junto com a mudança nas entidades.
 
-## Cronograma
+## Documentação
 
-| Data | Entrega |
-|---|---|
-| 28/08 | Ambiente, repositório, estrutura da solução, modelagem do banco + 1ª migration |
-| 04/09 | Importador da PokéAPI + CRUD de Pokémon na API |
-| 11/09 | CRUD de Jogador, Partida e Configuração + esqueleto do frontend |
-| 18/09 | **Marco:** protótipo navegável — criação de partida e sorteio do pool |
-| 02/10 | Motor do draft: ban, compra, validações, controle de saldo |
-| 09/10 | Venda + trava anti-beco-sem-saída + histórico de movimentações |
-| 16/10 | **Marco:** MVP integrado — tela do draft ponta a ponta |
-| 23/10 | Polimento visual, sprites, feedback de erro, responsividade |
-| 30/10 | **Marco:** versão candidata — testes, casos de borda, bugs |
-| 06/11 | Congelamento do código, README final, ensaio da defesa |
+Na pasta `docs/`:
+
+- **Manual Técnico** — arquitetura, função de cada arquivo, estrutura do banco
+- **Lista de Exercícios** — 72 exercícios de C#, MVC, EF Core e API para treino

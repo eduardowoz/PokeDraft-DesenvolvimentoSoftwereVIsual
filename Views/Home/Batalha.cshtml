@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Pokedraft - Batalha";
+}
+
+<div class="batalha-container">
+    <header class="batalha-header text-center mb-4">
+        <h1 class="h4 fw-bold text-dark m-0 titulo-com-pokebola"><span class="pokebola" aria-hidden="true"></span>Escalação para a Batalha</h1>
+        <p class="text-muted small">Cada treinador deve escalar exatamente 6 Pokémon da sua equipe.</p>
+    </header>
+
+    <main class="arena-batalha">
+        <!-- Jogador 1 (Lado Esquerdo) -->
+        <section class="painel-jogador-batalha shadow-soft">
+            <div class="identidade-jogador border-bottom pb-3 mb-3 text-center">
+                <img id="spriteJogadorUm" alt="Sprite do Jogador 1" class="jogador-batalha-sprite mb-2" />
+                <h2 id="nomeJogadorUm" class="h5 fw-bold text-dark m-0">Jogador 1</h2>
+            </div>
+            <div id="seletoresJogadorUm" class="seletores-batalha">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Centro da Arena (Controle de Início) -->
+        <div class="centro-batalha marca-dagua-pokebola d-flex flex-column align-items-center justify-content-center text-center px-2">
+            <div class="vs-badge mb-3">VS</div>
+            <button id="botaoIniciarResultado" type="button" class="botao-batalha mb-3" disabled>
+                Iniciar Batalha
+            </button>
+            <p id="mensagemBatalha" class="mensagem-batalha text-danger">
+                Aguardando escalação completa dos 12 Pokémon.
+            </p>
+        </div>
+
+        <!-- Jogador 2 (Lado Direito) -->
+        <section class="painel-jogador-batalha shadow-soft">
+            <div class="identidade-jogador border-bottom pb-3 mb-3 text-center">
+                <img id="spriteJogadorDois" alt="Sprite do Jogador 2" class="jogador-batalha-sprite mb-2" />
+                <h2 id="nomeJogadorDois" class="h5 fw-bold text-dark m-0">Jogador 2</h2>
+            </div>
+            <div id="seletoresJogadorDois" class="seletores-batalha">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </section>
+    </main>
+</div>
+
+@section Scripts {
+    <script src="~/js/batalha.js" asp-append-version="true"></script>
+}

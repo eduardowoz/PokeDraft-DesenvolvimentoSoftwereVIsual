@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Pokedraft - Resultado da Batalha";
+}
+
+<div class="resultado-container">
+    <header class="resultado-header text-center mb-4">
+        <h1 class="h4 fw-bold text-dark m-0 titulo-com-pokebola"><span class="pokebola" aria-hidden="true"></span>Resultado da Batalha</h1>
+        <p class="text-muted small">Confronto direto baseado no Overall (Soma dos Base Stats)</p>
+    </header>
+
+    <div class="placar-geral marca-dagua-pokebola card p-4 bg-white shadow-soft mb-4 text-center">
+        <div class="row align-items-center">
+            <div class="col-5">
+                <h3 id="nomePlacarUm" class="h5 fw-bold text-dark">Jogador 1</h3>
+                <div class="display-6 fw-bold text-primary" id="pontosUm">0</div>
+                <small class="text-muted">Vitórias</small>
+            </div>
+            <div class="col-2">
+                <span class="badge bg-dark fs-6 px-3 py-2">VS</span>
+            </div>
+            <div class="col-5">
+                <h3 id="nomePlacarDois" class="h5 fw-bold text-dark">Jogador 2</h3>
+                <div class="display-6 fw-bold text-danger" id="pontosDois">0</div>
+                <small class="text-muted">Vitórias</small>
+            </div>
+        </div>
+        <div id="vencedorFinalContainer" class="mt-3 pt-3 border-top" style="display: none;">
+            <h4 id="vencedorFinalTexto" class="text-success fw-bold m-0"></h4>
+        </div>
+    </div>
+
+    <div class="card p-4 bg-white shadow-soft">
+        <h2 class="h6 fw-bold text-secondary mb-3">Confrontos por Rodada</h2>
+        <div id="listaRodadas" class="d-flex flex-column gap-3">
+            <!-- Preenchido via JavaScript -->
+        </div>
+    </div>
+
+    <div class="text-center mt-4 mb-4">
+        <button type="button" id="botaoVoltarInicio" class="btn btn-secondary px-4 fw-semibold">
+            Voltar para o Início
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/resultado.js" asp-append-version="true"></script>
+}

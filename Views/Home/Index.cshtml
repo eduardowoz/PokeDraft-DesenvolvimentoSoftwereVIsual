@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Pokedraft - Início";
+}
+
+<div class="row g-4 align-items-start mb-4">
+    <!-- Coluna Esquerda: Gestão de Jogadores e Cadastro -->
+    <div class="col-lg-6">
+        <div class="card p-4 bg-white shadow-soft marca-dagua-pokebola">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <h2 class="h5 fw-bold text-dark m-0">
+                    Gestão de Jogadores
+                </h2>
+                <span class="badge bg-light text-secondary border px-2 py-1" id="contadorJogadores">0 cadastrados</span>
+            </div>
+
+            <div id="listaJogadores" class="d-flex flex-column gap-2 mb-3" style="max-height: 280px; overflow-y: auto; padding-right: 4px;">
+                <p class="text-muted small text-center py-3 m-0">Nenhum jogador cadastrado ainda.</p>
+            </div>
+
+            <hr class="text-muted opacity-25 my-3" />
+
+            <h3 class="h6 fw-bold text-secondary mb-3">Adicionar Novo Jogador</h3>
+            
+            <!-- Formulário com Grid simétrico para alinhar perfeitamente o preview do topo do nome até a base do select -->
+            <div class="novo-jogador-grid mb-3">
+                <div class="campo-nome">
+                    <label for="nomeJogador" class="form-label small fw-semibold text-muted mb-1">Nome</label>
+                    <input type="text" id="nomeJogador" class="form-control form-control-sm" placeholder="Ex: Ash Ketchum" />
+                </div>
+                
+                <div class="campo-avatar">
+                    <label for="spriteJogador" class="form-label small fw-semibold text-muted mb-1">Avatar</label>
+                    <select id="spriteJogador" class="form-select form-select-sm" onchange="atualizarPreviewSprite()">
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+
+                <div class="bloco-preview">
+                    <span class="form-label small fw-semibold text-muted mb-1 text-center d-block">Preview</span>
+                    <div id="previewContainer" class="sprite-preview-box rounded d-flex align-items-center justify-content-center bg-light border w-100 h-100">
+                        <span class="text-muted text-center px-1" style="font-size: 0.7rem;">Nenhum</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-sm w-100 py-2.5 fw-semibold shadow-sm" onclick="criarJogador()">
+                Cadastrar Jogador
+            </button>
+        </div>
+    </div>
+
+    <!-- Coluna Direita: Configuração da Partida -->
+    <div class="col-lg-6">
+        <div class="card p-4 bg-white shadow-soft h-100 marca-dagua-pokebola">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <h2 class="h5 fw-bold text-dark m-0">
+                    Configuração da Partida
+                </h2>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Modo Draft</span>
+            </div>
+            
+            <div class="mb-3">
+                <label for="budget" class="form-label small fw-semibold text-muted">Budget (Min: 1000)</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light text-muted">Pts</span>
+                    <input type="number" id="budget" class="form-control" min="1000" step="100" value="1000" placeholder="Valor mínimo: 1000" />
+                </div>
+                <div class="form-text text-muted" style="font-size: 0.75rem;">Orçamento inicial disponível para cada treinador.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="jogadorUm" class="form-label small fw-semibold text-muted">Jogador 1</label>
+                <select id="jogadorUm" class="form-select">
+                    <option value="">Escolha o primeiro jogador</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="jogadorDois" class="form-label small fw-semibold text-muted">Jogador 2</label>
+                <select id="jogadorDois" class="form-select">
+                    <option value="">Escolha o segundo jogador</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-success w-100 py-2.5 fw-semibold shadow-sm mt-auto" onclick="criarPartida()">
+                Iniciar Partida
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/index.js" asp-append-version="true"></script>
+}
