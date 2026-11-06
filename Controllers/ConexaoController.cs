@@ -122,4 +122,25 @@ public class ConexaoController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPatch("{id}/{tamanho}")]
+    public async Task<IActionResult> VerificarTurno(int id, int tamanho)
+    {
+        if(tamanho >= 6){
+            var turno = await _context.Partidas.FindAsync(id);
+            if(turno == null)
+            {
+                return BadRequest("bad request");
+            }
+            if(turno.Turno == turno.JogadorUmId)
+            {
+                turno.Turno = turno.JogadorDoisId;
+            } else
+            {
+                turno.Turno = turno.JogadorUmId;
+            }
+            await _context.SaveChangesAsync();
+        }
+        return Ok(" ok ");
+    }
 }

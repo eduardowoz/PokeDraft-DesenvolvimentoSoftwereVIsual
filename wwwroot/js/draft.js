@@ -120,6 +120,11 @@ function mostrarPokemons(pokemons){
         card.classList.add("card-pokemon");
 
         card.addEventListener("click", async () => {
+            const lista = await fetch(
+                `/api/conexao/${partidaId}/${jogadorTurno}`
+            );
+            const listapokemons = await lista.json();
+            quantidadeTime[jogadorTurno] = listapokemons.length;
             if((quantidadeTime[jogadorTurno] ?? 0) >= TAMANHO_TIME){
                 mostrarAviso(
                     `Time cheio: cada jogador pode ter no máximo ${TAMANHO_TIME} Pokémon.`
@@ -237,8 +242,22 @@ async function carregarJogadores(){
     }
     console.log("Jogador 1:", jogadorUm, "Jogador 2:", jogadorDois);
 
+    // arrumando bug de vender pokemon no turno errado
+    const poke = await fetch(
+        `/api/conexao/${partida.id}/${partida.turno}`
+    );
+    const pokes = await poke.json();
+    const attTurno = await fetch(
+        `/api/conexao/${partida.id}/${pokes.length}`,
+        {
+            method: "PATCH"
+        }
+    );
+    console.log(attTurno);
+    
     // atualizar o id do jogador
     jogadorTurno = partida.turno;
+
     atualizarTurno();
     // mostrar os jogadores
     document.getElementById("nomeJogadorUm").textContent = jogadorUm.nome;
