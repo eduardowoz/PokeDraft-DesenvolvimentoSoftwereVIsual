@@ -242,7 +242,7 @@ async function carregarJogadores(){
     }
     console.log("Jogador 1:", jogadorUm, "Jogador 2:", jogadorDois);
 
-    // arrumando bug de vender pokemon no turno errado
+    // se quem está na vez já tem o time cheio, passa a vez para o outro jogador
     const poke = await fetch(
         `/api/conexao/${partida.id}/${partida.turno}`
     );
@@ -254,9 +254,14 @@ async function carregarJogadores(){
         }
     );
     console.log(attTurno);
-    
+
     // atualizar o id do jogador
     jogadorTurno = partida.turno;
+    // o PATCH pode ter trocado o turno no banco; sem isso a tela continuaria
+    // mostrando (e usando) o jogador antigo, que já está com o time cheio
+    if(attTurno.ok && pokes.length >= TAMANHO_TIME){
+        jogadorTurno = partida.turno === jogadorUm.id ? jogadorDois.id : jogadorUm.id;
+    }
 
     atualizarTurno();
     // mostrar os jogadores

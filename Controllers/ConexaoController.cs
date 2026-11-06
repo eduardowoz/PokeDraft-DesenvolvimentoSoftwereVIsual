@@ -126,7 +126,7 @@ public class ConexaoController : ControllerBase
     [HttpPatch("{id}/{tamanho}")]
     public async Task<IActionResult> VerificarTurno(int id, int tamanho)
     {
-        if(tamanho >= 6){
+        if(tamanho >= TamanhoMaximoTime){
             var turno = await _context.Partidas.FindAsync(id);
             if(turno == null)
             {
