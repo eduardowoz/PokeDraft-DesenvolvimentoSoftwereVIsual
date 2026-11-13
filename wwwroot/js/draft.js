@@ -120,6 +120,11 @@ function mostrarPokemons(pokemons){
         card.classList.add("card-pokemon");
 
         card.addEventListener("click", async () => {
+            const lista = await fetch(
+                `/api/conexao/${partidaId}/${jogadorTurno}`
+            );
+            const listapokemons = await lista.json();
+            quantidadeTime[jogadorTurno] = listapokemons.length;
             if((quantidadeTime[jogadorTurno] ?? 0) >= TAMANHO_TIME){
                 mostrarAviso(
                     `Time cheio: cada jogador pode ter no máximo ${TAMANHO_TIME} Pokémon.`
@@ -237,8 +242,27 @@ async function carregarJogadores(){
     }
     console.log("Jogador 1:", jogadorUm, "Jogador 2:", jogadorDois);
 
+    // se quem está na vez já tem o time cheio, passa a vez para o outro jogador
+    const poke = await fetch(
+        `/api/conexao/${partida.id}/${partida.turno}`
+    );
+    const pokes = await poke.json();
+    const attTurno = await fetch(
+        `/api/conexao/${partida.id}/${pokes.length}`,
+        {
+            method: "PATCH"
+        }
+    );
+    console.log(attTurno);
+
     // atualizar o id do jogador
     jogadorTurno = partida.turno;
+    // o PATCH pode ter trocado o turno no banco; sem isso a tela continuaria
+    // mostrando (e usando) o jogador antigo, que já está com o time cheio
+    if(attTurno.ok && pokes.length >= TAMANHO_TIME){
+        jogadorTurno = partida.turno === jogadorUm.id ? jogadorDois.id : jogadorUm.id;
+    }
+
     atualizarTurno();
     // mostrar os jogadores
     document.getElementById("nomeJogadorUm").textContent = jogadorUm.nome;
